@@ -1,25 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import './Login.scss';
 import * as actions from '../../store/actions';
 
 const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPasswordd] = useState(false);
+
+    const handleOnChangeUsername = (e) => {
+        setUsername(e.target.value);
+    };
+
+    const handleOnChangePassword = (e) => {
+        setPassword(e.target.value);
+    };
+
+    const handleLogin = () => {};
+
+    const handleShowHidePassword = () => {
+        setShowPasswordd(!showPassword);
+    };
+
     return (
         <div className="login-background">
             <div className="login-container">
                 <div className="login-content row g-3">
-                    <div className="col-12 text-login">Login</div>
+                    <div className="col-12 login-title text-center">Login</div>
                     <div className="col-12 form-group">
                         <label className="form-label">Username</label>
-                        <input type="text" className="form-control" placeholder="Enter your username" />
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Enter your username"
+                            value={username}
+                            onChange={(e) => handleOnChangeUsername(e)}
+                        />
                     </div>
                     <div className="col-12 form-group">
                         <label className="form-label">Password</label>
-                        <input type="password" className="form-control" placeholder="Enter your password" />
+                        <div className="login-password">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                className="form-control"
+                                placeholder="Enter your password"
+                                value={password}
+                                onChange={(e) => handleOnChangePassword(e)}
+                            />
+                            <span onClick={() => handleShowHidePassword()}>
+                                <i
+                                    className={
+                                        showPassword ? 'fas fa-eye show-password' : 'fas fa-eye-slash show-password'
+                                    }
+                                ></i>
+                            </span>
+                        </div>
                     </div>
                     <div className="col-12">
-                        <button className="btn-login">Login</button>
+                        <button className="btn-login" onClick={() => handleLogin()}>
+                            Login
+                        </button>
                     </div>
                     <div className="col-12">
                         <span className="forgot-password">Forgot your password ?</span>
