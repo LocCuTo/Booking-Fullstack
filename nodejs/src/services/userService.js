@@ -5,7 +5,7 @@ let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
             if (!email || !password) {
-                return res.status(200).json({
+                resolve({
                     errCode: 1,
                     errMessage: 'Missing parameter',
                 });
