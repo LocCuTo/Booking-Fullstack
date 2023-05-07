@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { emitter } from '../../utils/emitter';
 
 const ModalUser = ({ modal, toggle, createNewUser }) => {
     const [user, setUser] = useState({
@@ -10,6 +11,13 @@ const ModalUser = ({ modal, toggle, createNewUser }) => {
         lastName: '',
         address: '',
     });
+
+    const listentoEmitter = () => {
+        emitter.on('EVENT_CLEAR_MODAL_DATA', () => {
+            // reset state
+            setUser({ email: '', password: '', firstName: '', lastName: '', address: '' });
+        });
+    };
 
     const handleOnChangeInput = (e, id) => {
         let copyState = user;
@@ -35,6 +43,7 @@ const ModalUser = ({ modal, toggle, createNewUser }) => {
         if (isValid === true) {
             // call api
             createNewUser(user);
+            listentoEmitter();
         }
     };
 

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import './UserManage.scss';
 import { connect } from 'react-redux';
-import { createNewUserAPI, getAllUsersAPI } from '../../services/userService';
+import { createNewUserAPI, deleteUserAPI, getAllUsersAPI } from '../../services/userService';
 import ModalUser from './ModalUser';
+import { emitter } from '../../utils/emitter';
 
 const UserManage = () => {
     const [arrUsers, setArrUsers] = useState([]);
@@ -31,6 +32,20 @@ const UserManage = () => {
             } else {
                 await getAllUsersAPI();
                 setModal(false);
+                emitter.emit('EVENT_CLEAR_MODAL_DATA');
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
+    const deleteUser = async (user) => {
+        try {
+            let res = await deleteUserAPI(user.id);
+            if (res && res.errCode === 0) {
+                await getAllUsersAPI();
+            } else {
+                alert(res.errMessage);
             }
         } catch (e) {
             console.log(e);
@@ -74,7 +89,11 @@ const UserManage = () => {
                                             <button className="btn btn-primary mx-2" style={{ width: '60px' }}>
                                                 Edit
                                             </button>
-                                            <button className="btn btn-danger" style={{ width: '60px' }}>
+                                            <button
+                                                className="btn btn-danger"
+                                                style={{ width: '60px' }}
+                                                onClick={() => deleteUser(item)}
+                                            >
                                                 Delete
                                             </button>
                                         </td>
