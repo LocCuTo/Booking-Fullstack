@@ -110,7 +110,7 @@ let createNewUser = (data) => {
         try {
             // Check email exists
             let check = await checkUserEmail(data.email);
-            if (check) {
+            if (check === true) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Your email has already been used. Plz try another email',

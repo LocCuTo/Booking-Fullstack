@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import './UserManage.scss';
 import { connect } from 'react-redux';
-import { getAllUsers } from '../../services/userService';
+import { createNewUserAPI, getAllUsersAPI } from '../../services/userService';
 import ModalUser from './ModalUser';
 
 const UserManage = () => {
     const [arrUsers, setArrUsers] = useState([]);
     const [modal, setModal] = useState(false);
 
-    const getUser = async (id) => {
-        let response = await getAllUsers(id);
+    const getUser = async () => {
+        let response = await getAllUsersAPI('ALL');
         if (response && response.errCode === 0) {
             setArrUsers(response.users);
         }
@@ -23,13 +23,27 @@ const UserManage = () => {
         setModal(!modal);
     };
 
+    const createNewUser = async (data) => {
+        try {
+            let res = await createNewUserAPI(data);
+            if (res && res.errCode !== 0) {
+                alert(res.errMessage);
+            } else {
+                await getAllUsersAPI();
+                setModal(false);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     useEffect(() => {
-        getUser('ALL');
-    }, []);
+        getUser();
+    }, [arrUsers]);
 
     return (
         <div className="users-container">
-            <ModalUser modal={modal} toggle={toggleUserModal} />
+            <ModalUser modal={modal} toggle={toggleUserModal} createNewUser={createNewUser} />
             <div className="title text-center">Manage users</div>
             <div className="mx-1">
                 <button className="btn btn-primary px-3" onClick={() => handleAddNewUser()}>
