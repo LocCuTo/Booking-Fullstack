@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import './UserManage.scss';
 import { connect } from 'react-redux';
 import { getAllUsers } from '../../services/userService';
+import ModalUser from './ModalUser';
 
 const UserManage = () => {
     const [arrUsers, setArrUsers] = useState([]);
+    const [modal, setModal] = useState(false);
 
     const getUser = async (id) => {
         let response = await getAllUsers(id);
@@ -13,13 +15,27 @@ const UserManage = () => {
         }
     };
 
+    const handleAddNewUser = () => {
+        setModal(true);
+    };
+
+    const toggleUserModal = () => {
+        setModal(!modal);
+    };
+
     useEffect(() => {
         getUser('ALL');
     }, []);
 
     return (
         <div className="users-container">
+            <ModalUser modal={modal} toggle={toggleUserModal} />
             <div className="title text-center">Manage users</div>
+            <div className="mx-1">
+                <button className="btn btn-primary px-3" onClick={() => handleAddNewUser()}>
+                    <i className="fas fa-plus"></i> Add new user
+                </button>
+            </div>
             <div className="users-table mt-3 mx-1">
                 <table id="customers">
                     <thead>
@@ -34,7 +50,6 @@ const UserManage = () => {
                     <tbody>
                         {arrUsers &&
                             arrUsers.map((item, i) => {
-                                console.log('Check map: ', item, i);
                                 return (
                                     <tr key={i}>
                                         <td>{item.email}</td>
