@@ -30,4 +30,26 @@ let getAllUsers = async (req, res) => {
     });
 };
 
-module.exports = { handleLogin, getAllUsers };
+let createNewUser = async (req, res) => {
+    let message = await userService.createNewUser(req.body);
+    return res.status(200).json(message);
+};
+
+let editUser = async (req, res) => {
+    let data = req.body;
+    let message = await userService.editUser(data);
+    return res.status(200).json(message);
+};
+
+let deleteUser = async (req, res) => {
+    if (!req.body.id) {
+        return res.status(200).json({
+            errCode: 1,
+            errMessage: 'Missing required parameter',
+        });
+    }
+    let message = await userService.deleteUser(req.body.id);
+    return res.status(200).json(message);
+};
+
+module.exports = { handleLogin, getAllUsers, createNewUser, editUser, deleteUser };
