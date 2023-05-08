@@ -62,16 +62,38 @@
 
             .language-vi {
                 cursor: pointer;
+                opacity: 0.4;
+
                 &.active {
+                    font-weight: 600;
+                    opacity: 1;
+                    span {
+                        color: orange;
+                    }
+                }
+                &:hover {
+                    font-weight: 600;
+                    opacity: 1;
                     color: orange;
                 }
             }
 
             .language-en {
                 margin: 0 10px;
+                opacity: 0.4;
                 cursor: pointer;
 
                 &.active {
+                    opacity: 1;
+                    font-weight: 600;
+                    span {
+                        color: orange;
+                    }
+                }
+
+                &:hover {
+                    font-weight: 600;
+                    opacity: 1;
                     color: orange;
                 }
             }
