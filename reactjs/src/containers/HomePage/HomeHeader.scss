@@ -1,7 +1,8 @@
 .home-header-container {
-    height: 60px;
+    height: 70px;
     width: 100%;
     padding: 0 20px;
+    background-color: rgb(238, 238, 86);
 
     .home-header-content {
         width: 100%;
@@ -9,14 +10,16 @@
         display: flex;
 
         .left-content {
-            width: 25%;
+            width: 20%;
             display: flex;
             align-items: center;
 
             .header-logo {
-                background: url('../../assets/images/logo.svg') center center no-repeat;
                 height: 100%;
                 width: 100%;
+                cursor: pointer;
+                transform: scale(0.5, 0.5);
+                margin-left: -45px;
             }
 
             i {
@@ -27,7 +30,7 @@
         }
 
         .center-content {
-            width: 50%;
+            width: 55%;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -45,12 +48,39 @@
             display: flex;
             justify-content: center;
             align-items: center;
+
+            .support {
+                padding-right: 50px;
+                display: flex;
+                align-items: center;
+
+                i {
+                    font-size: 15px;
+                    margin-right: 5px;
+                }
+            }
+
+            .language-vi {
+                cursor: pointer;
+                &.active {
+                    color: orange;
+                }
+            }
+
+            .language-en {
+                margin: 0 10px;
+                cursor: pointer;
+
+                &.active {
+                    color: orange;
+                }
+            }
         }
     }
 }
 
 .home-header-banner {
-    background: url('../../assets/images/bookingcare.jpg');
+    background-image: url('../../assets/images/bookingcare.jpg');
     height: 650px;
     background-repeat: no-repeat;
     background-size: cover;
@@ -59,7 +89,8 @@
     flex-direction: column;
 
     .content-up {
-        height: 50%;
+        background-image: linear-gradient(rgba(126, 126, 126, 0.25), rgba(255, 255, 255, 0.1));
+        height: 65%;
         padding-top: 15px;
 
         .title1 {
@@ -104,7 +135,12 @@
     }
 
     .content-down {
-        height: 50%;
+        height: 35%;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 60px;
+        justify-content: center;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 1));
 
         .options {
             text-align: center;
@@ -114,6 +150,7 @@
 
             .option-child {
                 width: 100px;
+
                 .icon-child {
                     background: white;
                     width: 40px;
