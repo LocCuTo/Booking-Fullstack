@@ -2,39 +2,39 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Slider from 'react-slick';
 
-const Specialty = ({ settings }) => {
+const MedicalFacility = ({ settings }) => {
     return (
-        <div className="section-share section-specialty">
+        <div className="section-share section-medical-facility">
             <div className="section-container">
                 <div className="section-header">
-                    <span className="title-section">Chuyên khoa phổ biến</span>
+                    <span className="title-section">Cơ sở y tế nổi bật</span>
                     <button className="btn-section">Xem thêm</button>
                 </div>
                 <div className="section-body">
                     <Slider {...settings}>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                         <div className="section-customize">
-                            <div className="bg-image section-specialty"></div>
-                            <div>Cơ xương khớp 1</div>
+                            <div className="bg-image section-medical-facility"></div>
+                            <div>Hệ thống y tế Thu Cúc 1</div>
                         </div>
                     </Slider>
                 </div>
@@ -54,4 +54,4 @@ const mapDispatchToProps = (dispatch) => {
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Specialty);
+export default connect(mapStateToProps, mapDispatchToProps)(MedicalFacility);
