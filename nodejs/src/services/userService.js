@@ -198,4 +198,29 @@ let editUser = (data) => {
     });
 };
 
-module.exports = { handleUserLogin, getAllUsers, createNewUser, deleteUser, editUser };
+let getAllCode = (type) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!type) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameter',
+                });
+            } else {
+                let res = {};
+                let allcode = await db.Allcode.findAll({
+                    where: {
+                        type,
+                    },
+                });
+                res.errCode = 0;
+                res.data = allcode;
+                resolve(res);
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+module.exports = { handleUserLogin, getAllUsers, createNewUser, deleteUser, editUser, getAllCode };

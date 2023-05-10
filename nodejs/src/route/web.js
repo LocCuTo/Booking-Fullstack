@@ -19,6 +19,8 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-users', userController.getAllUsers);
     router.put('/api/edit-user', userController.editUser);
     router.delete('/api/delete-user', userController.deleteUser);
+
+    router.get('/allcode', userController.getAllCode);
     return app.use('/', router);
 };
 
