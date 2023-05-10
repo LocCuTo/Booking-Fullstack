@@ -8,6 +8,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import './HomePage.scss';
 import OutstandingDoctor from './Section/OutstandingDoctor';
 import HandBook from './Section/HandBook';
+import About from './Section/About';
+import HomeFooter from './HomeFooter';
 
 const HomePage = () => {
     const settings = {
@@ -23,6 +25,8 @@ const HomePage = () => {
             <MedicalFacility settings={settings} />
             <OutstandingDoctor settings={settings} />
             <HandBook settings={settings} />
+            <About />
+            <HomeFooter />
         </div>
     );
 };
