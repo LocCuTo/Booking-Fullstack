@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import { LANGUAGES } from '../../utils/constant';
 import { changeLanguageApp } from '../../store/actions';
 
-const HomeHeader = ({ language, changeLanguageRedux }) => {
+const HomeHeader = ({ language, changeLanguageRedux, userInfo }) => {
     const changeLanguage = (language) => {
         changeLanguageRedux(language);
     };
@@ -173,6 +173,7 @@ const mapStateToProps = (state) => {
     return {
         isLoggedIn: state.user.isLoggedIn,
         language: state.app.language,
+        userInfo: state.user.userInfo,
     };
 };
 
