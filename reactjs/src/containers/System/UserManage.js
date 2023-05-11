@@ -12,13 +12,6 @@ const UserManage = () => {
     const [modalEdit, setModalEdit] = useState(false);
     const [userEdit, setUserEdit] = useState({});
 
-    const getUser = async () => {
-        let response = await getAllUsersAPI('ALL');
-        if (response && response.errCode === 0) {
-            setArrUsers(response.users);
-        }
-    };
-
     const handleAddNewUser = () => {
         setModal(true);
     };
@@ -75,6 +68,13 @@ const UserManage = () => {
             }
         } catch (e) {
             console.log(e);
+        }
+    };
+
+    const getUser = async () => {
+        let response = await getAllUsersAPI('ALL');
+        if (response && response.errCode === 0) {
+            setArrUsers(response.users);
         }
     };
 

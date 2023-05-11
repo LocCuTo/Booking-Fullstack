@@ -1,26 +1,65 @@
 import React, { useEffect, useState } from 'react';
+import './UserRedux.scss';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { LANGUAGES } from '../../../utils/constant';
 import * as actions from '../../../store/actions';
+import Lightbox from 'react-image-lightbox';
+import 'react-image-lightbox/style.css';
 
-const UserRedux = ({ language, getGenderStart, genderRedux }) => {
+const UserRedux = ({
+    language,
+    getGenderStart,
+    getPositionStart,
+    getRoleStart,
+    genderRedux,
+    isLoadingGender,
+    positionRedux,
+    roleRedux,
+}) => {
     const [genderArr, setGenderArr] = useState([]);
+    const [positionArr, setPositionArr] = useState([]);
+    const [roleArr, setRoleArr] = useState([]);
+    const [previewURL, setPreviewURL] = useState('');
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleOnChangeImage = (e) => {
+        let data = e.target.files;
+        let file = data[0];
+        if (file) {
+            let objectURL = URL.createObjectURL(file);
+            setPreviewURL(objectURL);
+        }
+    };
+
+    const openPreviewImage = () => {
+        if (!previewURL) return;
+        setIsOpen(true);
+    };
 
     useEffect(() => {
         getGenderStart();
+        getPositionStart();
+        getRoleStart();
+    }, [getGenderStart, getPositionStart, getRoleStart]);
+
+    useEffect(() => {
         setGenderArr(genderRedux);
-    }, [getGenderStart, genderRedux]);
+        setPositionArr(positionRedux);
+        setRoleArr(roleRedux);
+    }, [genderRedux, positionRedux, roleRedux]);
 
     return (
         <div className="user-redux-container">
             <div className="title">User redux</div>
+
             <div className="user-redux-body">
                 <div className="container">
                     <div className="row g-3">
                         <div className="col-12">
                             <FormattedMessage id="manage-user.add" />
                         </div>
+                        <div className="col-12">{isLoadingGender === true ? 'Loading genders' : ''}</div>
                         <div class="col-6">
                             <label class="form-label" for="inputEmail4">
                                 <FormattedMessage id="manage-user.email" />
@@ -78,10 +117,15 @@ const UserRedux = ({ language, getGenderStart, genderRedux }) => {
                                 <FormattedMessage id="manage-user.position" />
                             </label>
                             <select name="position" class="form-select">
-                                <option selected>Select position</option>
-                                <option value="0">None</option>
-                                <option value="1">Doctor</option>
-                                <option value="2">Professor</option>
+                                {positionArr &&
+                                    positionArr.length > 0 &&
+                                    positionArr.map((item, i) => {
+                                        return (
+                                            <option key={i}>
+                                                {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
+                                            </option>
+                                        );
+                                    })}
                             </select>
                         </div>
                         <div class="col-md-3">
@@ -89,17 +133,29 @@ const UserRedux = ({ language, getGenderStart, genderRedux }) => {
                                 <FormattedMessage id="manage-user.role" />
                             </label>
                             <select name="roleId" class="form-select">
-                                <option selected>Select role</option>
-                                <option value="1">Admin</option>
-                                <option value="2">Doctor</option>
-                                <option value="3">Patient</option>
+                                {roleArr &&
+                                    roleArr.length > 0 &&
+                                    roleArr.map((item, i) => {
+                                        return (
+                                            <option key={i}>
+                                                {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
+                                            </option>
+                                        );
+                                    })}
                             </select>
                         </div>
                         <div className="col-md-3">
                             <label class="form-label">
                                 <FormattedMessage id="manage-user.image" />
                             </label>
-                            <input type="text" className="form-control" />
+                            <div className="preview-img-container">
+                                <input type="file" className="form-control" onChange={(e) => handleOnChangeImage(e)} />
+                                <div
+                                    className="preview-image"
+                                    onClick={() => openPreviewImage()}
+                                    style={{ backgroundImage: `url(${previewURL})` }}
+                                ></div>
+                            </div>
                         </div>
                         <div className="col-12">
                             <button className="btn btn-primary">
@@ -109,6 +165,7 @@ const UserRedux = ({ language, getGenderStart, genderRedux }) => {
                     </div>
                 </div>
             </div>
+            {isOpen === true && <Lightbox mainSrc={previewURL} onCloseRequest={() => setIsOpen(false)} />}
         </div>
     );
 };
@@ -117,12 +174,17 @@ const mapStateToProps = (state) => {
     return {
         language: state.app.language,
         genderRedux: state.admin.genders,
+        positionRedux: state.admin.positions,
+        roleRedux: state.admin.roles,
+        isLoadingGender: state.admin.isLoadingGender,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
         getGenderStart: () => dispatch(actions.fetchGenderStart()),
+        getPositionStart: () => dispatch(actions.fetchPositionStart()),
+        getRoleStart: () => dispatch(actions.fetchRoleStart()),
     };
 };
 
