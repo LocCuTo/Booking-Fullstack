@@ -117,6 +117,7 @@ let createNewUser = (data) => {
                 });
             } else {
                 let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+                console.log(data);
                 await db.User.create({
                     email: data.email,
                     password: hashPasswordFromBcrypt,
@@ -124,8 +125,9 @@ let createNewUser = (data) => {
                     lastName: data.lastName,
                     address: data.address,
                     phonenumber: data.phonenumber,
-                    gender: data.gender === '1' ? true : false,
+                    gender: data.gender,
                     roleId: data.roleId,
+                    positionId: data.positionId,
                 });
                 resolve({
                     errCode: 0,
