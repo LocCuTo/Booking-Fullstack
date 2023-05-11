@@ -1,26 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
-import { getAllCodeAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils/constant';
+import * as actions from '../../../store/actions';
 
-const UserRedux = ({ language }) => {
+const UserRedux = ({ language, getGenderStart, genderRedux }) => {
     const [genderArr, setGenderArr] = useState([]);
 
-    const getAllCode = async () => {
-        try {
-            let res = await getAllCodeAPI('gender');
-            if (res && res.errCode === 0) {
-                setGenderArr(res.data);
-            }
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
     useEffect(() => {
-        getAllCode();
-    }, []);
+        getGenderStart();
+        setGenderArr(genderRedux);
+    }, [getGenderStart, genderRedux]);
 
     return (
         <div className="user-redux-container">
@@ -126,11 +116,14 @@ const UserRedux = ({ language }) => {
 const mapStateToProps = (state) => {
     return {
         language: state.app.language,
+        genderRedux: state.admin.genders,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return {};
+    return {
+        getGenderStart: () => dispatch(actions.fetchGenderStart()),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserRedux);
