@@ -1,5 +1,6 @@
-import { createNewUserAPI, getAllCodeAPI } from '../../services/userService';
+import { createNewUserAPI, deleteUserAPI, getAllCodeAPI, getAllUsersAPI } from '../../services/userService';
 import actionTypes from './actionTypes';
+import { toast } from 'react-toastify';
 
 export const fetchGenderStart = () => {
     return async (dispatch, getState) => {
@@ -83,11 +84,42 @@ export const createNewUser = (data) => {
             let res = await createNewUserAPI(data);
             console.log('Check create: ', res);
             if (res && res.errCode === 0) {
+                toast.success('User Created!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
                 dispatch(saveUserSuccess(res.data));
+                dispatch(fetchAllUsersStart());
             } else {
+                toast.error('Something went wrong!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
                 dispatch(saveUserFailed());
             }
         } catch (e) {
+            toast.error('Something went wrong!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
             dispatch(saveUserFailed());
             console.log('fetch create user error: ', e);
         }
@@ -100,4 +132,85 @@ export const saveUserSuccess = () => ({
 
 export const saveUserFailed = () => ({
     type: actionTypes.CREATE_USER_FAILED,
+});
+
+export const fetchAllUsersStart = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllUsersAPI('ALL');
+            if (res && res.errCode === 0) {
+                dispatch(fetchAllUsersSuccess(res.users.reverse()));
+            } else {
+                dispatch(fetchAllUsersFailed());
+            }
+        } catch (e) {
+            dispatch(fetchAllUsersFailed());
+            console.log('Fetch role error: ', e);
+        }
+    };
+};
+
+export const fetchAllUsersSuccess = (users) => ({
+    type: actionTypes.FETCH_ALL_USERS_SUCCESS,
+    users,
+});
+
+export const fetchAllUsersFailed = (users) => ({
+    type: actionTypes.FETCH_ALL_USERS_FAILED,
+});
+
+export const deleteUser = (id) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await deleteUserAPI(id);
+            console.log('Check create: ', res);
+            if (res && res.errCode === 0) {
+                toast.success('User Deleted!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch(deleteUserSuccess());
+                dispatch(fetchAllUsersStart());
+            } else {
+                toast.error('Something went wrong!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch(deleteUserFailed());
+            }
+        } catch (e) {
+            toast.error('Something went wrong!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            dispatch(deleteUserFailed());
+            console.log('fetch create user error: ', e);
+        }
+    };
+};
+
+export const deleteUserSuccess = () => ({
+    type: 'DELETE_USER_SUCCESS',
+});
+
+export const deleteUserFailed = () => ({
+    type: 'DELETE_USER_FAILED',
 });

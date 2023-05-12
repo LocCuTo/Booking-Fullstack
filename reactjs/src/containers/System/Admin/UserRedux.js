@@ -6,6 +6,7 @@ import { LANGUAGES } from '../../../utils/constant';
 import * as actions from '../../../store/actions';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import TableManageUser from './TableManageUser';
 
 const UserRedux = ({
     language,
@@ -17,6 +18,7 @@ const UserRedux = ({
     positionRedux,
     roleRedux,
     createNewUser,
+    listUsers,
 }) => {
     const [genderArr, setGenderArr] = useState([]);
     const [positionArr, setPositionArr] = useState([]);
@@ -111,6 +113,21 @@ const UserRedux = ({
         setPositionArr(positionRedux);
         setRoleArr(roleRedux);
     }, [genderRedux, positionRedux, roleRedux]);
+
+    useEffect(() => {
+        setUser({
+            email: '',
+            password: '',
+            firstName: '',
+            lastName: '',
+            phonenumber: '',
+            address: '',
+            gender: 'M',
+            position: 'P0',
+            role: 'R1',
+            avatar: '',
+        });
+    }, [listUsers]);
 
     return (
         <div className="user-redux-container">
@@ -266,9 +283,13 @@ const UserRedux = ({
                                 <FormattedMessage id="manage-user.save" />
                             </button>
                         </div>
+                        <div className="col-12">
+                            <TableManageUser />
+                        </div>
                     </div>
                 </div>
             </div>
+
             {isOpen === true && <Lightbox mainSrc={previewURL} onCloseRequest={() => setIsOpen(false)} />}
         </div>
     );
@@ -281,6 +302,7 @@ const mapStateToProps = (state) => {
         positionRedux: state.admin.positions,
         roleRedux: state.admin.roles,
         isLoadingGender: state.admin.isLoadingGender,
+        listUsers: state.admin.users,
     };
 };
 
