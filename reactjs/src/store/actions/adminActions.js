@@ -208,9 +208,9 @@ export const deleteUser = (id) => {
 };
 
 export const deleteUserSuccess = () => ({
-    type: 'DELETE_USER_SUCCESS',
+    type: actionTypes.DELETE_USER_SUCCESS,
 });
 
 export const deleteUserFailed = () => ({
-    type: 'DELETE_USER_FAILED',
+    type: actionTypes.DELETE_USER_FAILED,
 });
