@@ -13,7 +13,7 @@ import HomeFooter from './HomeFooter';
 
 const HomePage = () => {
     const settings = {
-        infinite: true,
+        infinite: false,
         speed: 500,
         slidesToShow: 4,
         slidesToScroll: 2,
