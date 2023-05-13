@@ -3,7 +3,7 @@ import './TableManageUser.scss';
 import { useEffect, useState } from 'react';
 import * as actions from '../../../store/actions';
 
-const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux, handleEditUserFromParent, action }) => {
+const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux, handleEditUserFromParent }) => {
     const [arrUsers, setArrUsers] = useState();
 
     const handleDeleteUser = (user) => {

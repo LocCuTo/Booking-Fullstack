@@ -347,7 +347,7 @@ const UserRedux = ({
                             </button>
                         </div>
                         <div className="col-12">
-                            <TableManageUser handleEditUserFromParent={handleEditUserFromParent} action={user.action} />
+                            <TableManageUser handleEditUserFromParent={handleEditUserFromParent} />
                         </div>
                     </div>
                 </div>
