@@ -1,4 +1,10 @@
-import { createNewUserAPI, deleteUserAPI, getAllCodeAPI, getAllUsersAPI } from '../../services/userService';
+import {
+    createNewUserAPI,
+    deleteUserAPI,
+    editUserServiceAPI,
+    getAllCodeAPI,
+    getAllUsersAPI,
+} from '../../services/userService';
 import actionTypes from './actionTypes';
 import { toast } from 'react-toastify';
 
@@ -213,4 +219,60 @@ export const deleteUserSuccess = () => ({
 
 export const deleteUserFailed = () => ({
     type: actionTypes.DELETE_USER_FAILED,
+});
+
+export const editUser = (data) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await editUserServiceAPI(data);
+            console.log('Check create: ', res);
+            if (res && res.errCode === 0) {
+                toast.success('User Updated!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch(editUserSuccess());
+                dispatch(fetchAllUsersStart());
+            } else {
+                toast.error('Something went wrong!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch(editUserFailed());
+            }
+        } catch (e) {
+            toast.error('Something went wrong!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            dispatch(editUserFailed());
+            console.log('fetch create user error: ', e);
+        }
+    };
+};
+
+export const editUserSuccess = () => ({
+    type: actionTypes.EDIT_USER_SUCCESS,
+});
+
+export const editUserFailed = () => ({
+    type: actionTypes.EDIT_USER_FAILED,
 });

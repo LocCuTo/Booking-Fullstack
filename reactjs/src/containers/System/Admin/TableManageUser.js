@@ -3,11 +3,15 @@ import './TableManageUser.scss';
 import { useEffect, useState } from 'react';
 import * as actions from '../../../store/actions';
 
-const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux }) => {
+const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux, handleEditUserFromParent, action }) => {
     const [arrUsers, setArrUsers] = useState();
 
     const handleDeleteUser = (user) => {
         deleteUserRedux(user.id);
+    };
+
+    const handleEditUser = (user) => {
+        handleEditUserFromParent(user);
     };
 
     useEffect(() => {
@@ -38,7 +42,11 @@ const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux }) => {
                                 <td>{item.lastName}</td>
                                 <td>{item.address}</td>
                                 <td>
-                                    <button className="btn btn-primary mx-2" style={{ width: '60px' }}>
+                                    <button
+                                        className="btn btn-primary mx-2"
+                                        style={{ width: '60px' }}
+                                        onClick={() => handleEditUser(item)}
+                                    >
                                         Edit
                                     </button>
                                     <button
