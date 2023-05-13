@@ -7,6 +7,7 @@ import * as actions from '../../../store/actions';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import TableManageUser from './TableManageUser';
+import CommonUtils from '../../../utils/CommonUtils';
 
 const UserRedux = ({
     language,
@@ -41,13 +42,14 @@ const UserRedux = ({
         action: '',
     });
 
-    const handleOnChangeImage = (e) => {
+    const handleOnChangeImage = async (e) => {
         let data = e.target.files;
         let file = data[0];
         if (file) {
+            let base64 = await CommonUtils.getBase64(file);
             let objectURL = URL.createObjectURL(file);
             setPreviewURL(objectURL);
-            setUser({ ...user, avatar: file });
+            setUser({ ...user, avatar: base64 });
         }
     };
 
@@ -68,7 +70,6 @@ const UserRedux = ({
             'gender',
             'position',
             'role',
-            'avatar',
         ];
         for (let i = 0; i < arrCheck.length; i++) {
             if (!user[arrCheck[i]]) {
@@ -96,6 +97,7 @@ const UserRedux = ({
                 gender: user.gender,
                 roleId: user.role,
                 positionId: user.position,
+                avatar: user.avatar,
             });
         }
         if (user.action === CRUD_ACTIONS.EDIT) {
@@ -111,7 +113,7 @@ const UserRedux = ({
                 gender: user.gender,
                 roleId: user.role,
                 positionId: user.position,
-                // avatar: user.avatar,
+                avatar: user.avatar,
             });
         }
     };
@@ -124,6 +126,10 @@ const UserRedux = ({
     };
 
     const handleEditUserFromParent = (user) => {
+        let imageBase64 = '';
+        if (user.image) {
+            imageBase64 = new Buffer(user.image, 'base64').toString('binary');
+        }
         setUser({
             email: user.email,
             password: 'HARDCODE',
@@ -138,6 +144,7 @@ const UserRedux = ({
             action: CRUD_ACTIONS.EDIT,
             id: user.id,
         });
+        setPreviewURL(imageBase64);
     };
 
     useEffect(() => {
@@ -166,6 +173,7 @@ const UserRedux = ({
             avatar: '',
             action: CRUD_ACTIONS.CREATE,
         });
+        setPreviewURL('');
     }, [listUsers]);
 
     return (

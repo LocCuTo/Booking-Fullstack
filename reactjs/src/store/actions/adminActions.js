@@ -88,7 +88,6 @@ export const createNewUser = (data) => {
     return async (dispatch, getState) => {
         try {
             let res = await createNewUserAPI(data);
-            console.log('Check create: ', res);
             if (res && res.errCode === 0) {
                 toast.success('User Created!!!', {
                     position: 'top-right',
