@@ -53,5 +53,9 @@
         "image": "Avatar",
         "save": "Save",
         "edit": "Edit"
+    },
+    "homepage": {
+        "outstanding-doctor": "Outstanding doctors",
+        "more-info": "More info"
     }
 }

@@ -18,6 +18,7 @@ const HomePage = () => {
         slidesToShow: 4,
         slidesToScroll: 2,
     };
+
     return (
         <div>
             <HomeHeader />

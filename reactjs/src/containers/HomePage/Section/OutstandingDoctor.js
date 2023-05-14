@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import * as actions from '../../../store/actions';
 import { LANGUAGES } from '../../../utils/constant';
+import { FormattedMessage } from 'react-intl';
 
 const OutstandingDoctor = ({ settings, loadTopDoctor, topDoctorsRedux, language }) => {
     const [arrDoctors, setArrDoctors] = useState([]);
@@ -19,8 +20,12 @@ const OutstandingDoctor = ({ settings, loadTopDoctor, topDoctorsRedux, language 
         <div className="section-share section-outstanding-doctor">
             <div className="section-container">
                 <div className="section-header">
-                    <span className="title-section">Bác sĩ nổi bật từng khoa</span>
-                    <button className="btn-section">Xem thêm</button>
+                    <span className="title-section">
+                        <FormattedMessage id="homepage.outstanding-doctor" />
+                    </span>
+                    <button className="btn-section">
+                        <FormattedMessage id="homepage.more-info" />
+                    </button>
                 </div>
                 <div className="section-body">
                     <Slider {...settings}>
