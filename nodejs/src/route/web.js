@@ -20,11 +20,12 @@ let initWebRoutes = (app) => {
     router.get('/api/get-all-users', userController.getAllUsers);
     router.put('/api/edit-user', userController.editUser);
     router.delete('/api/delete-user', userController.deleteUser);
-
     router.get('/api/allcode', userController.getAllCode);
+
     router.get('/api/get-top-doctor', doctorController.getTopDoctor);
     router.get('/api/get-all-doctors', doctorController.getAllDoctors);
     router.post('/api/save-info-doctor', doctorController.saveInfoDoctor);
+    router.get('/api/get-detail-doctor-by-id', doctorController.getDetailDoctorById);
     return app.use('/', router);
 };
 
