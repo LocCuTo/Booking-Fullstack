@@ -3,8 +3,10 @@ import {
     deleteUserAPI,
     editUserServiceAPI,
     getAllCodeAPI,
+    getAllDoctorsAPI,
     getAllUsersAPI,
     getTopDoctorAPI,
+    saveDetailDoctorAPI,
 } from '../../services/userService';
 import actionTypes from './actionTypes';
 import { toast } from 'react-toastify';
@@ -225,7 +227,6 @@ export const editUser = (data) => {
     return async (dispatch, getState) => {
         try {
             let res = await editUserServiceAPI(data);
-            console.log('Check create: ', res);
             if (res && res.errCode === 0) {
                 toast.success('User Updated!!!', {
                     position: 'top-right',
@@ -289,6 +290,58 @@ export const fetchTopDoctor = () => {
         } catch (e) {
             console.log(e);
             dispatch({ type: actionTypes.FETCH_TOP_DOCTOR_FAILED });
+        }
+    };
+};
+
+export const fetchAllDoctor = () => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await getAllDoctorsAPI();
+            if (res && res.errCode === 0) {
+                dispatch({ type: actionTypes.FETCH_ALL_DOCTORS_SUCCESS, data: res.data });
+            } else {
+                dispatch({ type: actionTypes.FETCH_ALL_DOCTORS_FAILED });
+            }
+        } catch (e) {
+            console.log(e);
+            dispatch({ type: actionTypes.FETCH_ALL_DOCTORS_FAILED });
+        }
+    };
+};
+
+export const saveDetailDoctor = (data) => {
+    return async (dispatch, getState) => {
+        try {
+            let res = await saveDetailDoctorAPI(data);
+            if (res && res.errCode === 0) {
+                toast.success('Saved!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch({ type: actionTypes.SAVE_DETAIL_DOCTOR_SUCCESS });
+            } else {
+                toast.error('Something went wrong!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                dispatch({ type: actionTypes.SAVE_DETAIL_DOCTOR_FAILED });
+            }
+        } catch (e) {
+            console.log(e);
+            dispatch({ type: actionTypes.SAVE_DETAIL_DOCTOR_FAILED });
         }
     };
 };

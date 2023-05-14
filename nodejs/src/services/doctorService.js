@@ -30,4 +30,51 @@ let getTopDoctor = (limit) => {
     });
 };
 
-module.exports = { getTopDoctor };
+let getAllDoctors = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let doctors = await db.User.findAll({
+                where: { roleId: 'R2' },
+                attributes: {
+                    exclude: ['password', 'image'],
+                },
+            });
+
+            resolve({
+                errCode: 0,
+                data: doctors,
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+let saveInfoDoctor = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.doctorId || !data.contentHTML || !data.contentMarkdown) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing parameter',
+                });
+            } else {
+                await db.Markdown.create({
+                    contentHTML: data.contentHTML,
+                    contentMarkdown: data.contentMarkdown,
+                    description: data.description,
+                    doctorId: data.doctorId,
+                });
+
+                resolve({
+                    errCode: 0,
+                    message: "Doctor's info Saved",
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+module.exports = { getTopDoctor, getAllDoctors, saveInfoDoctor };

@@ -28,6 +28,14 @@ const getTopDoctorAPI = (limit) => {
     return axios.get(`/api/get-top-doctor?limit=${limit}`);
 };
 
+const getAllDoctorsAPI = () => {
+    return axios.get('/api/get-all-doctors');
+};
+
+const saveDetailDoctorAPI = (data) => {
+    return axios.post('/api/save-info-doctor', data);
+};
+
 export {
     handleLoginAPI,
     getAllUsersAPI,
@@ -36,4 +44,6 @@ export {
     editUserServiceAPI,
     getAllCodeAPI,
     getTopDoctorAPI,
+    getAllDoctorsAPI,
+    saveDetailDoctorAPI,
 };

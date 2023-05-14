@@ -6,28 +6,31 @@ import MdEditor from 'react-markdown-editor-lite';
 import 'react-markdown-editor-lite/lib/index.css';
 import './ManageDoctor.scss';
 import Select from 'react-select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { LANGUAGES } from '../../../utils/constant';
 
-const ManageDoctor = () => {
+const ManageDoctor = ({ fetchAllDoctors, allDoctors, language, saveDetailDoctor }) => {
     const mdParser = new MarkdownIt(/* Markdown-it options */);
-
-    const options = [
-        { value: 'chocolate', label: 'Chocolate' },
-        { value: 'strawberry', label: 'Strawberry' },
-        { value: 'vanilla', label: 'Vanilla' },
-    ];
 
     const [contentMarkdown, setContentMarkdown] = useState('');
     const [contentHTML, setContentHTML] = useState('');
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [description, setDescription] = useState('');
+    const [listDoctors, setListDoctors] = useState([]);
 
     const handleEditorChange = ({ html, text }) => {
         setContentHTML(html);
         setContentMarkdown(text);
     };
 
-    const handleSaveContentMarkdown = () => {};
+    const handleSaveContentMarkdown = () => {
+        saveDetailDoctor({
+            contentHTML: contentHTML,
+            contentMarkdown: contentMarkdown,
+            description: description,
+            doctorId: selectedDoctor.value,
+        });
+    };
 
     const handleChange = (selectedOption) => {
         setSelectedDoctor(selectedOption);
@@ -37,13 +40,38 @@ const ManageDoctor = () => {
         setDescription(e.target.value);
     };
 
+    const buildDataInputSelect = (data) => {
+        let result = [];
+        if (data && data.length > 0) {
+            data.map((item, i) => {
+                let object = {};
+                let labelVi = `${item.lastName} ${item.firstName}`;
+                let labelEn = `${item.firstName} ${item.lastName}`;
+
+                object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                object.value = item.id;
+                result.push(object);
+            });
+        }
+
+        return result;
+    };
+
+    useEffect(() => {
+        fetchAllDoctors();
+    }, [fetchAllDoctors]);
+
+    useEffect(() => {
+        setListDoctors(buildDataInputSelect(allDoctors));
+    }, [allDoctors, language]);
+
     return (
         <div className="manage-doctor-container">
             <div className="manage-doctor-title">Tạo thêm thông tin bác sĩ</div>
             <div className="more-info">
                 <div className="content-left">
                     <label>Chọn bác sĩ</label>
-                    <Select value={selectedDoctor} onChange={handleChange} options={options} />
+                    <Select value={selectedDoctor} onChange={handleChange} options={listDoctors} />
                 </div>
                 <div className="content-right">
                     <label>Thông tin giới thiệu</label>
@@ -73,14 +101,15 @@ const ManageDoctor = () => {
 
 const mapStateToProps = (state) => {
     return {
-        listUsers: state.admin.users,
+        allDoctors: state.admin.doctors,
+        language: state.app.language,
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchUserRedux: () => dispatch(actions.fetchAllUsersStart()),
-        deleteUserRedux: (id) => dispatch(actions.deleteUser(id)),
+        fetchAllDoctors: () => dispatch(actions.fetchAllDoctor()),
+        saveDetailDoctor: (data) => dispatch(actions.saveDetailDoctor(data)),
     };
 };
 
