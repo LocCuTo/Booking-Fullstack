@@ -171,7 +171,6 @@ export const deleteUser = (id) => {
     return async (dispatch, getState) => {
         try {
             let res = await deleteUserAPI(id);
-            console.log('Check create: ', res);
             if (res && res.errCode === 0) {
                 toast.success('User Deleted!!!', {
                     position: 'top-right',

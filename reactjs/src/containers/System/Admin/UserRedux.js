@@ -187,13 +187,13 @@ const UserRedux = ({
                             <FormattedMessage id="manage-user.add" />
                         </div>
                         <div className="col-12">{isLoadingGender === true ? 'Loading genders' : ''}</div>
-                        <div class="col-6">
-                            <label class="form-label" for="inputEmail4">
+                        <div className="col-6">
+                            <label className="form-label" for="inputEmail4">
                                 <FormattedMessage id="manage-user.email" />
                             </label>
                             <input
                                 type="email"
-                                class="form-control"
+                                className="form-control"
                                 name="email"
                                 placeholder="Email"
                                 value={user.email}
@@ -201,13 +201,13 @@ const UserRedux = ({
                                 disabled={user.action === CRUD_ACTIONS.EDIT}
                             />
                         </div>
-                        <div class="col-6">
-                            <label class="form-label" for="inputPassword4">
+                        <div className="col-6">
+                            <label className="form-label" for="inputPassword4">
                                 <FormattedMessage id="manage-user.password" />
                             </label>
                             <input
                                 type="password"
-                                class="form-control"
+                                className="form-control"
                                 name="password"
                                 placeholder="Password"
                                 value={user.password}
@@ -215,65 +215,65 @@ const UserRedux = ({
                                 disabled={user.action === CRUD_ACTIONS.EDIT}
                             />
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">
+                        <div className="col-md-6">
+                            <label className="form-label">
                                 <FormattedMessage id="manage-user.firstName" />
                             </label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 name="firstName"
                                 placeholder="First name"
                                 value={user.firstName}
                                 onChange={(e) => onChangeInput(e, 'firstName')}
                             />
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">
+                        <div className="col-md-6">
+                            <label className="form-label">
                                 <FormattedMessage id="manage-user.lastName" />
                             </label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 name="lastName"
                                 placeholder="Last name"
                                 value={user.lastName}
                                 onChange={(e) => onChangeInput(e, 'lastName')}
                             />
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="inputAddress">
+                        <div className="col-md-6">
+                            <label className="form-label" for="inputAddress">
                                 <FormattedMessage id="manage-user.address" />
                             </label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 name="address"
                                 placeholder="1234 Main St"
                                 value={user.address}
                                 onChange={(e) => onChangeInput(e, 'address')}
                             />
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label" for="inputCity">
+                        <div className="col-md-6">
+                            <label className="form-label" for="inputCity">
                                 <FormattedMessage id="manage-user.phonenumber" />
                             </label>
                             <input
                                 type="text"
-                                class="form-control"
+                                className="form-control"
                                 name="phonenumber"
                                 value={user.phonenumber}
                                 onChange={(e) => onChangeInput(e, 'phonenumber')}
                             />
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label" for="inputState">
+                        <div className="col-md-3">
+                            <label className="form-label" for="inputState">
                                 <FormattedMessage id="manage-user.gender" />
                             </label>
                             <select
                                 value={user.gender}
                                 name="gender"
-                                class="form-select"
+                                className="form-select"
                                 onChange={(e) => onChangeInput(e, 'gender')}
                             >
                                 {genderArr &&
@@ -287,14 +287,14 @@ const UserRedux = ({
                                     })}
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label" for="inputState">
+                        <div className="col-md-3">
+                            <label className="form-label" for="inputState">
                                 <FormattedMessage id="manage-user.position" />
                             </label>
                             <select
                                 value={user.position}
                                 name="position"
-                                class="form-select"
+                                className="form-select"
                                 onChange={(e) => onChangeInput(e, 'position')}
                             >
                                 {positionArr &&
@@ -308,14 +308,14 @@ const UserRedux = ({
                                     })}
                             </select>
                         </div>
-                        <div class="col-md-3">
-                            <label class="form-label" for="inputZip">
+                        <div className="col-md-3">
+                            <label className="form-label" for="inputZip">
                                 <FormattedMessage id="manage-user.role" />
                             </label>
                             <select
                                 name="role"
                                 value={user.role}
-                                class="form-select"
+                                className="form-select"
                                 onChange={(e) => onChangeInput(e, 'role')}
                             >
                                 {roleArr &&
@@ -330,7 +330,7 @@ const UserRedux = ({
                             </select>
                         </div>
                         <div className="col-md-3">
-                            <label class="form-label">
+                            <label className="form-label">
                                 <FormattedMessage id="manage-user.image" />
                             </label>
                             <div className="preview-img-container">

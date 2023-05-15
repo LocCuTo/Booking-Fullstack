@@ -92,12 +92,20 @@ let getDetailDoctorById = (id) => {
                         { model: db.Markdown, attributes: ['description', 'contentHTML', 'contentMarkdown'] },
                         { model: db.Allcode, as: 'positionData', attributes: ['valueVi', 'valueEn'] },
                     ],
-                    raw: true,
+                    raw: false,
                     nest: true,
                     attributes: {
-                        exclude: ['image', 'password'],
+                        exclude: ['password'],
                     },
                 });
+
+                if (data && data.image) {
+                    data.image = new Buffer(data.image, 'base64').toString('binary');
+                }
+
+                if (!data) {
+                    data = {};
+                }
 
                 resolve({
                     errCode: 0,
