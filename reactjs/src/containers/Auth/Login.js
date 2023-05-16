@@ -42,6 +42,12 @@ const Login = ({ userLoginSuccess }) => {
         setShowPasswordd(!showPassword);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleLogin();
+        }
+    };
+
     return (
         <div className="login-background">
             <div className="login-container">
@@ -66,6 +72,7 @@ const Login = ({ userLoginSuccess }) => {
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => handleOnChangePassword(e)}
+                                onKeyDown={(e) => handleKeyDown(e)}
                             />
                             <span onClick={() => handleShowHidePassword()}>
                                 <i
