@@ -12,5 +12,18 @@
         display: flex;
         gap: 20px;
         flex-wrap: wrap;
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        button {
+            padding: 5px 10px;
+            border: 1px solid gray;
+        }
+
+        .btn-time {
+            &.active {
+                background-color: orange;
+            }
+        }
     }
 }

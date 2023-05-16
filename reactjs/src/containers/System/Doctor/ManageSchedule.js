@@ -4,8 +4,11 @@ import './ManageSchedule.scss';
 import { FormattedMessage } from 'react-intl';
 import * as actions from '../../../store/actions';
 import Select from 'react-select';
-import { LANGUAGES } from '../../../utils/constant';
+import { LANGUAGES, dateFormat } from '../../../utils/constant';
 import DatePicker from '../../../components/Input/DatePicker';
+import moment from 'moment';
+import { toast } from 'react-toastify';
+import _ from 'lodash';
 
 const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllScheduleTime, allScheduleTime }) => {
     const [listDoctors, setListDoctors] = useState([]);
@@ -26,7 +29,6 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
                 result.push(object);
             });
         }
-
         return result;
     };
 
@@ -38,6 +40,78 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
         setCurrentDate(date[0]);
     };
 
+    const handleClickButtonTime = (time) => {
+        if (rangeTime && rangeTime.length > 0) {
+            setRangeTime((prev) =>
+                prev.map((item) => {
+                    if (item.id === time.id) {
+                        return { ...item, isSelected: !item.isSelected };
+                    }
+                    return item;
+                }),
+            );
+        }
+    };
+
+    const handleSaveSchedule = () => {
+        let result = [];
+        if (!currentDate) {
+            toast.error('Invalid date!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            return;
+        }
+        if (selectedDoctor && _.isEmpty(selectedDoctor)) {
+            toast.error('Invalid doctor!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            return;
+        }
+        let formattedDate = moment(currentDate).format(dateFormat.SEND_TO_SERVER);
+
+        if (rangeTime && rangeTime.length > 0) {
+            let selectedTime = rangeTime.filter((item) => item.isSelected === true);
+            if (selectedTime && selectedTime.length > 0) {
+                selectedTime.map((schedule) => {
+                    let object = {};
+                    object.doctorId = selectedDoctor.value;
+                    object.date = formattedDate;
+                    object.time = schedule.keyMap;
+
+                    result.push(object);
+                });
+                console.log(result);
+                return result;
+            } else {
+                toast.error('Invalid selected time!!!', {
+                    position: 'top-right',
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: 'colored',
+                });
+                return;
+            }
+        }
+    };
+
     useEffect(() => {
         fetchAllDoctors();
         fetchAllScheduleTime();
@@ -45,8 +119,10 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
 
     useEffect(() => {
         setListDoctors(buildDataInputSelect(allDoctors));
-        setRangeTime(allScheduleTime);
+        setRangeTime(allScheduleTime && allScheduleTime.map((item) => ({ ...item, isSelected: false })));
     }, [allDoctors, language, allScheduleTime]);
+
+    useEffect(() => {}, [rangeTime]);
 
     return (
         <div className="manage-schedule-container">
@@ -77,14 +153,18 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
                             rangeTime.length > 0 &&
                             rangeTime.map((item, i) => {
                                 return (
-                                    <button key={i} className="btn btn-success">
+                                    <button
+                                        key={i}
+                                        className={item.isSelected === true ? 'btn btn-time active' : 'btn btn-time'}
+                                        onClick={() => handleClickButtonTime(item)}
+                                    >
                                         {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
                                     </button>
                                 );
                             })}
                     </div>
                     <div className="col-12">
-                        <button className="btn btn-primary">
+                        <button className="btn btn-primary" onClick={() => handleSaveSchedule()}>
                             <FormattedMessage id="manage-schedule.save" />
                         </button>
                     </div>
