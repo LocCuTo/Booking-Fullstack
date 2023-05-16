@@ -6,9 +6,10 @@ import * as actions from '../../../store/actions';
 import Select from 'react-select';
 import { LANGUAGES, dateFormat } from '../../../utils/constant';
 import DatePicker from '../../../components/Input/DatePicker';
-import moment from 'moment';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+import { saveBulkScheduleDoctorAPI } from '../../../services/userService';
+import moment from 'moment';
 
 const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllScheduleTime, allScheduleTime }) => {
     const [listDoctors, setListDoctors] = useState([]);
@@ -53,7 +54,7 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
         }
     };
 
-    const handleSaveSchedule = () => {
+    const handleSaveSchedule = async () => {
         let result = [];
         if (!currentDate) {
             toast.error('Invalid date!!!', {
@@ -90,12 +91,10 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
                     let object = {};
                     object.doctorId = selectedDoctor.value;
                     object.date = formattedDate;
-                    object.time = schedule.keyMap;
+                    object.timeType = schedule.keyMap;
 
                     result.push(object);
                 });
-                console.log(result);
-                return result;
             } else {
                 toast.error('Invalid selected time!!!', {
                     position: 'top-right',
@@ -110,6 +109,11 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
                 return;
             }
         }
+        let res = await saveBulkScheduleDoctorAPI({
+            arrSchedule: result,
+            doctorId: selectedDoctor.value,
+            date: formattedDate,
+        });
     };
 
     useEffect(() => {
@@ -121,8 +125,6 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
         setListDoctors(buildDataInputSelect(allDoctors));
         setRangeTime(allScheduleTime && allScheduleTime.map((item) => ({ ...item, isSelected: false })));
     }, [allDoctors, language, allScheduleTime]);
-
-    useEffect(() => {}, [rangeTime]);
 
     return (
         <div className="manage-schedule-container">

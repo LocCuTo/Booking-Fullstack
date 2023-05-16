@@ -1,4 +1,9 @@
 const db = require('../models');
+require('dotenv').config();
+import _ from 'lodash';
+import moment from 'moment';
+
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 let getTopDoctor = (limit) => {
     return new Promise(async (resolve, reject) => {
@@ -132,4 +137,56 @@ let getDetailDoctorById = (id) => {
     });
 };
 
-module.exports = { getTopDoctor, getAllDoctors, saveInfoDoctor, getDetailDoctorById };
+let bulkCreateSchedule = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.arrSchedule || !data.doctorId || !data.date) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameter',
+                });
+            } else {
+                let schedule = data.arrSchedule;
+                if (schedule && schedule.length > 0) {
+                    schedule = schedule.map((item) => {
+                        item.maxNumber = MAX_NUMBER_SCHEDULE;
+                        return item;
+                    });
+                }
+                // Check if doctor has already had a schedule at that time or not
+                // if not, create new appoitment. If yes, do nothing
+
+                // get all existing data
+                let existing = await db.Schedule.findAll({
+                    where: { doctorId: data.doctorId, date: data.date },
+                    attributes: ['timeType', 'date', 'doctorId', 'maxNumber'],
+                    raw: true,
+                });
+                if (existing && existing.length > 0) {
+                    existing = existing.map((item) => {
+                        return item;
+                    });
+                }
+                // compare difference
+                let toCreate = _.differenceWith(schedule, existing, (a, b) => {
+                    return a.date === b.date && a.timeType === b.timeType;
+                });
+                // create data
+                if (toCreate && toCreate.length > 0) {
+                    await db.Schedule.bulkCreate(toCreate);
+                }
+
+                resolve({
+                    errCode: 0,
+                    message: 'OK',
+                });
+            }
+
+            resolve('');
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
+module.exports = { getTopDoctor, getAllDoctors, saveInfoDoctor, getDetailDoctorById, bulkCreateSchedule };
