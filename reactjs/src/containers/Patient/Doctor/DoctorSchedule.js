@@ -10,12 +10,19 @@ import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 const DoctorSchedule = ({ language }) => {
     const params = useParams();
     const [allDays, setAllDays] = useState([]);
+    const [allAvailableTime, setAllAvailableTime] = useState([]);
 
     const handleOnChangeSelect = async (e) => {
         let date = e.target.value;
         let doctorId = params.id;
         let res = await getScheduleDoctorByDateAPI(doctorId, date);
-        console.log(res);
+        if (res && res.errCode === 0) {
+            setAllAvailableTime(res.data ? res.data : []);
+        }
+    };
+
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     const getSchedule = () => {
@@ -23,7 +30,8 @@ const DoctorSchedule = ({ language }) => {
         for (let i = 0; i < 7; i++) {
             let object = {};
             if (language === LANGUAGES.VI) {
-                object.label = moment(new Date()).add(i, 'days').format('dddd - DD/MM');
+                let labelVi = moment(new Date()).add(i, 'days').format('dddd - DD/MM');
+                object.label = capitalizeFirstLetter(labelVi);
             } else {
                 object.label = moment(new Date()).add(i, 'days').locale('en').format('ddd - DD/MM');
             }
@@ -38,10 +46,6 @@ const DoctorSchedule = ({ language }) => {
     useEffect(() => {
         getSchedule();
     }, [language]);
-
-    useEffect(() => {
-        handleOnChangeSelect();
-    }, []);
 
     return (
         <div className="doctor-schedule-container">
@@ -58,7 +62,26 @@ const DoctorSchedule = ({ language }) => {
                         })}
                 </select>
             </div>
-            <div className="all-available-time"></div>
+            <div className="all-available-time">
+                <div className="text-calendar">
+                    <i className="fas fa-calendar-alt">
+                        <span>Lịch khám</span>
+                    </i>
+                </div>
+                <div className="time-content">
+                    {allAvailableTime && allAvailableTime.length > 0 ? (
+                        allAvailableTime.map((item, i) => {
+                            return (
+                                <button key={i}>
+                                    {language === LANGUAGES.VI ? item.timeTypeData.valueVi : item.timeTypeData.valueEn}
+                                </button>
+                            );
+                        })
+                    ) : (
+                        <div>Không có lịch hẹn trong thời gian này, vui lòng chọn khoảng thời gian khác</div>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };
