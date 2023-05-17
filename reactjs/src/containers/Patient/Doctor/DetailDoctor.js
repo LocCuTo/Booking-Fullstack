@@ -5,6 +5,7 @@ import HomeHeader from '../../HomePage/HomeHeader';
 import './DetailDoctor.scss';
 import { getDetailInfoDoctorAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils';
+import DoctorSchedule from './DoctorSchedule';
 
 const DetailDoctor = ({ language }) => {
     let nameVi = '';
@@ -49,7 +50,12 @@ const DetailDoctor = ({ language }) => {
                         </div>
                     </div>
                 </div>
-                <div className="schedule-doctor"></div>
+                <div className="schedule-doctor">
+                    <div className="content-left">
+                        <DoctorSchedule />
+                    </div>
+                    <div className="content-right"></div>
+                </div>
                 <div className="detail-info-doctor">
                     {detailDoctor && detailDoctor.Markdown && detailDoctor.Markdown.contentHTML && (
                         <div dangerouslySetInnerHTML={{ __html: detailDoctor.Markdown.contentHTML }}></div>
