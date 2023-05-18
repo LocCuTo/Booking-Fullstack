@@ -114,6 +114,30 @@ const ManageSchedule = ({ fetchAllDoctors, language, allDoctors, fetchAllSchedul
             doctorId: selectedDoctor.value,
             date: formattedDate,
         });
+
+        if (res && res.errCode === 0) {
+            toast.success('Save info successfully!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+        } else {
+            toast.error('Something went wrong!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+        }
     };
 
     useEffect(() => {
