@@ -57,13 +57,26 @@ let getAllDoctors = () => {
 
 let saveInfoDoctor = (data) => {
     return new Promise(async (resolve, reject) => {
+        console.log(data);
         try {
-            if (!data.doctorId || !data.contentHTML || !data.contentMarkdown || !data.action) {
+            if (
+                !data.doctorId ||
+                !data.contentHTML ||
+                !data.contentMarkdown ||
+                !data.action ||
+                !data.selectedPrice ||
+                !data.selectedProvince ||
+                !data.selectedPayment ||
+                !data.nameClinic ||
+                !data.addressClinic ||
+                !data.note
+            ) {
                 resolve({
                     errCode: 1,
                     errMessage: 'Missing parameter',
                 });
             } else {
+                // upsert to Markdown table
                 if (data.action === 'CREATE') {
                     await db.Markdown.create({
                         contentHTML: data.contentHTML,
@@ -84,6 +97,38 @@ let saveInfoDoctor = (data) => {
 
                         await doctorMarkdown.save();
                     }
+                }
+
+                // upsert to Doctor_Info table
+                let doctorInfo = await db.Doctor_Info.findOne({
+                    where: {
+                        doctorId: data.doctorId,
+                    },
+                    raw: false,
+                });
+
+                if (doctorInfo) {
+                    // update
+                    doctorInfo.doctorId = data.doctorId;
+                    doctorInfo.priceId = data.selectedPrice;
+                    doctorInfo.provinceId = data.selectedProvince;
+                    doctorInfo.paymentId = data.selectedPayment;
+                    doctorInfo.note = data.note;
+                    doctorInfo.addressClinic = data.addressClinic;
+                    doctorInfo.nameClinic = data.nameClinic;
+
+                    await doctorInfo.save();
+                } else {
+                    // create
+                    await db.Doctor_Info.create({
+                        doctorId: data.doctorId,
+                        priceId: data.selectedPrice,
+                        provinceId: data.selectedProvince,
+                        paymentId: data.selectedPayment,
+                        note: data.note,
+                        addressClinic: data.addressClinic,
+                        nameClinic: data.nameClinic,
+                    });
                 }
             }
             resolve({

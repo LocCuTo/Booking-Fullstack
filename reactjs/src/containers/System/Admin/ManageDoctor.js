@@ -25,19 +25,23 @@ const ManageDoctor = ({
     const [contentMarkdown, setContentMarkdown] = useState('');
     const [contentHTML, setContentHTML] = useState('');
     const [selectedDoctor, setSelectedDoctor] = useState('');
-    const [description, setDescription] = useState('');
     const [listDoctors, setListDoctors] = useState([]);
     const [hasOldData, setHasOldData] = useState(false);
     // save to doctor_info table
     const [listPrice, setListPrice] = useState([]);
     const [listPayment, setListPayment] = useState([]);
     const [listProvince, setListProvince] = useState([]);
-    const [selectedPrice, setSelectedPrice] = useState('');
-    const [selectedProvince, setSelectedProvince] = useState('');
-    const [selectedPayment, setSelectedPayment] = useState('');
-    const [nameClinic, setNameClinic] = useState('');
-    const [addressClinic, setAddressClinic] = useState('');
-    const [note, setNote] = useState('');
+    const [selected, setSelected] = useState({
+        selectedPrice: '',
+        selectedProvince: '',
+        selectedPayment: '',
+    });
+    const [info, setInfo] = useState({
+        nameClinic: '',
+        addressClinic: '',
+        note: '',
+        description: '',
+    });
 
     const handleEditorChange = ({ html, text }) => {
         setContentHTML(html);
@@ -48,9 +52,16 @@ const ManageDoctor = ({
         saveDetailDoctor({
             contentHTML: contentHTML,
             contentMarkdown: contentMarkdown,
-            description: description,
+            description: info.description,
             doctorId: selectedDoctor.value,
             action: hasOldData === true ? CRUD_ACTIONS.EDIT : CRUD_ACTIONS.CREATE,
+
+            selectedPrice: selected.selectedPrice.value,
+            selectedProvince: selected.selectedProvince.value,
+            selectedPayment: selected.selectedPayment.value,
+            nameClinic: info.nameClinic,
+            addressClinic: info.addressClinic,
+            note: info.note,
         });
     };
 
@@ -62,32 +73,66 @@ const ManageDoctor = ({
             let markdown = res.data.Markdown;
             setContentMarkdown(markdown.contentMarkdown);
             setContentHTML(markdown.contentHTML);
-            setDescription(markdown.description);
+            setInfo({ ...info, description: markdown.description });
             setHasOldData(true);
         } else {
             setContentMarkdown('');
             setContentHTML('');
-            setDescription('');
+            setInfo({ ...info, description: '' });
             setHasOldData(false);
         }
     };
 
-    const handleOnChangeDesc = (e) => {
-        setDescription(e.target.value);
+    const handleChageSelectDoctorInfo = async (selectedOption, name) => {
+        let stateName = name.name;
+        let stateCopy = { ...selected };
+        stateCopy[stateName] = selectedOption;
+
+        setSelected({ ...stateCopy });
+    };
+
+    const handleOnChangeText = (e, id) => {
+        let copyState = { ...info };
+        copyState[id] = e.target.value;
+        setInfo({ ...copyState });
     };
 
     const buildDataInputSelect = (data, type) => {
         let result = [];
         if (data && data.length > 0) {
-            data.map((item, i) => {
-                let object = {};
-                let labelVi = type === 'USERS' ? `${item.lastName} ${item.firstName}` : item.valueVi;
-                let labelEn = type === 'USERS' ? `${item.firstName} ${item.lastName}` : item.valueEn;
+            if (type === 'USERS') {
+                data.map((item, i) => {
+                    let object = {};
+                    let labelVi = `${item.lastName} ${item.firstName}`;
+                    let labelEn = `${item.firstName} ${item.lastName}`;
 
-                object.label = language === LANGUAGES.VI ? labelVi : labelEn;
-                object.value = item.id;
-                result.push(object);
-            });
+                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                    object.value = item.id;
+                    result.push(object);
+                });
+            }
+            if (type === 'PRICE') {
+                data.map((item, i) => {
+                    let object = {};
+                    let labelVi = item.valueVi;
+                    let labelEn = item.valueEn;
+
+                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                    object.value = item.keyMap;
+                    result.push(object);
+                });
+            }
+            if (type === 'PAYMENT' || type === 'PROVINCE') {
+                data.map((item, i) => {
+                    let object = {};
+                    let labelVi = item.valueVi;
+                    let labelEn = item.valueEn;
+
+                    object.label = language === LANGUAGES.VI ? labelVi : labelEn;
+                    object.value = item.keyMap;
+                    result.push(object);
+                });
+            }
         }
 
         return result;
@@ -101,9 +146,9 @@ const ManageDoctor = ({
     useEffect(() => {
         let { resPrice, resPayment, resProvince } = allRequiredDoctorInfo;
         setListDoctors(buildDataInputSelect(allDoctors, 'USERS'));
-        setListPrice(buildDataInputSelect(resPrice));
-        setListPayment(buildDataInputSelect(resPayment));
-        setListProvince(buildDataInputSelect(resProvince));
+        setListPrice(buildDataInputSelect(resPrice, 'PRICE'));
+        setListPayment(buildDataInputSelect(resPayment, 'PAYMENT'));
+        setListProvince(buildDataInputSelect(resProvince, 'PROVINCE'));
     }, [allDoctors, language, allRequiredDoctorInfo]);
 
     return (
@@ -130,51 +175,66 @@ const ManageDoctor = ({
                     <textarea
                         className="form-control"
                         rows={4}
-                        onChange={(e) => handleOnChangeDesc(e)}
-                        value={description}
+                        onChange={(e) => handleOnChangeText(e, 'description')}
+                        value={info.description}
                     ></textarea>
                 </div>
             </div>
 
             <div className="more-extra-info row g-3">
                 <div className="col-4 form-group">
-                    <label className="form-label">Chọn giá</label>
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.price" />
+                    </label>
                     <Select
-                        placeholder="Chọn giá"
-                        // value={selectedPrice}
-                        // onChange={handleChangeSelect}
+                        placeholder={<FormattedMessage id="admin.manage-doctor.price" />}
+                        value={selected.selectedPrice}
+                        onChange={handleChageSelectDoctorInfo}
+                        name="selectedPrice"
                         options={listPrice}
                     />
                 </div>
                 <div className="col-4 form-group">
-                    <label className="form-label">Phương thức thanh toán</label>
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.payment" />
+                    </label>
                     <Select
-                        placeholder="Chọn phương thức thanh toán"
-                        // value={selectedPayment}
-                        // onChange={handleChangeSelect}
+                        placeholder={<FormattedMessage id="admin.manage-doctor.payment" />}
+                        value={selected.selectedPayment}
+                        name="selectedPayment"
+                        onChange={handleChageSelectDoctorInfo}
                         options={listPayment}
                     />
                 </div>
                 <div className="col-4 form-group">
-                    <label className="form-label">Chọn tỉnh thành</label>
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.province" />
+                    </label>
                     <Select
-                        placeholder="Chọn tỉnh thành"
-                        // value={selectedProvince}
-                        // onChange={handleChangeSelect}
+                        placeholder={<FormattedMessage id="admin.manage-doctor.province" />}
+                        value={selected.selectedProvince}
+                        name="selectedProvince"
+                        onChange={handleChageSelectDoctorInfo}
                         options={listProvince}
                     />
                 </div>
                 <div className="col-4 form-group">
-                    <label className="form-label">Tên phòng khám</label>
-                    <input className="form-control" />
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.nameClinic" />
+                    </label>
+                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'nameClinic')} />
                 </div>
                 <div className="col-4 form-group">
-                    <label className="form-label">Địa chỉ phòng khám</label>
-                    <input className="form-control" />
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.addressClinic" />
+                    </label>
+                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'addressClinic')} />
                 </div>
                 <div className="col-4 form-group">
-                    <label className="form-label">Note</label>
-                    <input className="form-control" />
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.note" />
+                    </label>
+                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'note')} />
                 </div>
             </div>
 
