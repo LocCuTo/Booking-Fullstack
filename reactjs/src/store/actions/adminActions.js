@@ -360,3 +360,33 @@ export const fetchAllScheduleTime = () => {
         }
     };
 };
+
+export const getRequiredDoctorInfo = () => {
+    return async (dispatch, getState) => {
+        try {
+            let resPrice = await getAllCodeAPI('PRICE');
+            let resProvince = await getAllCodeAPI('PROVINCE');
+            let resPayment = await getAllCodeAPI('PAYMENT');
+            if (
+                resPrice &&
+                resPrice.errCode === 0 &&
+                resProvince &&
+                resProvince.errCode === 0 &&
+                resPayment &&
+                resPayment.errCode === 0
+            ) {
+                let data = {
+                    resPrice: resPrice.data,
+                    resPayment: resPayment.data,
+                    resProvince: resProvince.data,
+                };
+                dispatch({ type: actionTypes.FETCH_REQUIRED_DOCTOR_INFO_SUCCESS, data });
+            } else {
+                dispatch({ type: actionTypes.FETCH_REQUIRED_DOCTOR_INFO_FAILED });
+            }
+        } catch (e) {
+            dispatch({ type: actionTypes.FETCH_REQUIRED_DOCTOR_INFO_FAILED });
+            console.log('Fetch required info error: ', e);
+        }
+    };
+};
