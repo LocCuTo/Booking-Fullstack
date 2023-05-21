@@ -71,14 +71,56 @@ const ManageDoctor = ({
         let res = await getDetailInfoDoctorAPI(selectedOption.value);
         if (res && res.errCode === 0 && res.data && res.data.Markdown) {
             let markdown = res.data.Markdown;
+            let addressClinic = '',
+                nameClinic = '',
+                note = '',
+                paymentId = '',
+                priceId = '',
+                provinceId = '',
+                findPayment = '',
+                findPrice = '',
+                findProvince = '';
+
+            if (res.data.Doctor_Info) {
+                addressClinic = res.data.Doctor_Info.addressClinic;
+                nameClinic = res.data.Doctor_Info.nameClinic;
+                note = res.data.Doctor_Info.note;
+                paymentId = res.data.Doctor_Info.paymentId;
+                priceId = res.data.Doctor_Info.priceId;
+                provinceId = res.data.Doctor_Info.provinceId;
+
+                findPayment = listPayment.find((item) => item.value === paymentId);
+                findPrice = listPrice.find((item) => item.value === priceId);
+                findProvince = listProvince.find((item) => item.value === provinceId);
+            }
             setContentMarkdown(markdown.contentMarkdown);
             setContentHTML(markdown.contentHTML);
-            setInfo({ ...info, description: markdown.description });
+            setInfo({
+                description: markdown.description,
+                addressClinic: addressClinic,
+                nameClinic: nameClinic,
+                note: note,
+            });
+            setSelected({
+                selectedPrice: findPrice,
+                selectedPayment: findPayment,
+                selectedProvince: findProvince,
+            });
             setHasOldData(true);
         } else {
             setContentMarkdown('');
             setContentHTML('');
-            setInfo({ ...info, description: '' });
+            setInfo({
+                description: '',
+                addressClinic: '',
+                nameClinic: '',
+                note: '',
+            });
+            setSelected({
+                selectedPrice: '',
+                selectedPayment: '',
+                selectedProvince: '',
+            });
             setHasOldData(false);
         }
     };
@@ -222,19 +264,27 @@ const ManageDoctor = ({
                     <label className="form-label">
                         <FormattedMessage id="admin.manage-doctor.nameClinic" />
                     </label>
-                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'nameClinic')} />
+                    <input
+                        value={info.nameClinic}
+                        className="form-control"
+                        onChange={(e) => handleOnChangeText(e, 'nameClinic')}
+                    />
                 </div>
                 <div className="col-4 form-group">
                     <label className="form-label">
                         <FormattedMessage id="admin.manage-doctor.addressClinic" />
                     </label>
-                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'addressClinic')} />
+                    <input
+                        value={info.addressClinic}
+                        className="form-control"
+                        onChange={(e) => handleOnChangeText(e, 'addressClinic')}
+                    />
                 </div>
                 <div className="col-4 form-group">
                     <label className="form-label">
                         <FormattedMessage id="admin.manage-doctor.note" />
                     </label>
-                    <input className="form-control" onChange={(e) => handleOnChangeText(e, 'note')} />
+                    <input value={info.note} className="form-control" onChange={(e) => handleOnChangeText(e, 'note')} />
                 </div>
             </div>
 
