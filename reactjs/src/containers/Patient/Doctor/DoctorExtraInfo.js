@@ -1,44 +1,93 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './DoctorExtraInfo.scss';
+import { useParams } from 'react-router-dom';
+import { getExtraInfoDoctorByIdAPI } from '../../../services/userService';
+import { LANGUAGES } from '../../../utils/constant';
+import { FormattedMessage } from 'react-intl';
 
-const DoctorExtraInfo = () => {
+const DoctorExtraInfo = ({ language }) => {
+    const params = useParams();
     const [isShowDetailInfo, setIsShowDetailInfo] = useState(false);
+    const [extraInfo, setExtraInfo] = useState({});
+
+    const showExtraInfo = async (id) => {
+        let res = await getExtraInfoDoctorByIdAPI(id);
+        if (res && res.errCode === 0) {
+            setExtraInfo(res.data);
+        }
+    };
 
     const showHideDetailInfo = (status) => {
         setIsShowDetailInfo(status);
     };
 
+    useEffect(() => {
+        showExtraInfo(params.id);
+    }, [params.id]);
+
     return (
         <div className="doctor-extra-info-container">
             <div className="content-up">
-                <div className="text-address">ĐỊA CHỈ KHÁM</div>
-                <div className="name-clinic">Phòng khám da liễu</div>
-                <div className="detail-address">207 phố Huế</div>
+                <div className="text-address">
+                    <FormattedMessage id="patient.extra-info-doctor.text-address" />
+                </div>
+                <div className="name-clinic">{extraInfo && extraInfo.nameClinic ? extraInfo.nameClinic : ''}</div>
+                <div className="detail-address">
+                    {extraInfo && extraInfo.addressClinic ? extraInfo.addressClinic : ''}
+                </div>
             </div>
             <div className="content-down">
                 {isShowDetailInfo === false ? (
                     <div className="short-info">
-                        GIÁ KHÁM: 250.000đ. <span onClick={() => showHideDetailInfo(true)}>Xem chi tiết</span>
+                        <FormattedMessage id="patient.extra-info-doctor.price" />:{' '}
+                        {extraInfo && extraInfo.priceTypeData && language === LANGUAGES.VI && (
+                            <span>{extraInfo.priceTypeData.valueVi} VND</span>
+                        )}
+                        {extraInfo && extraInfo.priceTypeData && language === LANGUAGES.EN && (
+                            <span>${extraInfo.priceTypeData.valueEn}</span>
+                        )}{' '}
+                        <span className="detail" onClick={() => showHideDetailInfo(true)}>
+                            <FormattedMessage id="patient.extra-info-doctor.detail" />
+                        </span>
                     </div>
                 ) : (
                     <>
-                        <div className="title-price">GIÁ KHÁM: .</div>
                         <div className="detail-info">
                             <div className="price">
-                                <span className="left">Giá khám</span>
-                                <span className="right"> 250.000đ</span>
+                                <span className="left">
+                                    <FormattedMessage id="patient.extra-info-doctor.price" />
+                                </span>
+                                <span className="right">
+                                    {extraInfo && extraInfo.priceTypeData && language === LANGUAGES.VI && (
+                                        <span>{extraInfo.priceTypeData.valueVi} VND</span>
+                                    )}
+                                    {extraInfo && extraInfo.priceTypeData && language === LANGUAGES.EN && (
+                                        <span>${extraInfo.priceTypeData.valueEn}</span>
+                                    )}{' '}
+                                </span>
                             </div>
-                            <div className="note">
-                                Được ưu tiên khám trước khi đặt khám qua Bookingcare. Gía khám cho người nước ngoài là
-                                20$
-                            </div>
+                            <div className="note">{extraInfo && extraInfo.note ? extraInfo.note : ''}</div>
                         </div>
                         <div className="payment">
-                            Người bệnh có thể thanh toán chi phí bằng hình thức tiền mặt và quẹt thẻ
+                            <FormattedMessage id="patient.extra-info-doctor.payment" />{' '}
+                            {extraInfo &&
+                            extraInfo.paymentTypeData &&
+                            language === LANGUAGES.VI &&
+                            extraInfo.paymentTypeData.valueVi
+                                ? extraInfo.paymentTypeData.valueVi
+                                : ''}
+                            {extraInfo &&
+                            extraInfo.paymentTypeData &&
+                            language === LANGUAGES.EN &&
+                            extraInfo.paymentTypeData.valueEn
+                                ? extraInfo.paymentTypeData.valueEn
+                                : ''}
                         </div>
                         <div className="hide-price">
-                            <span onClick={() => showHideDetailInfo(false)}>Ẩn bảng giá</span>
+                            <span onClick={() => showHideDetailInfo(false)}>
+                                <FormattedMessage id="patient.extra-info-doctor.hide" />
+                            </span>
                         </div>
                     </>
                 )}
@@ -48,7 +97,9 @@ const DoctorExtraInfo = () => {
 };
 
 const mapStateToProps = (state) => {
-    return {};
+    return {
+        language: state.app.language,
+    };
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -24,7 +24,7 @@
 
     .content-down {
         .short-info {
-            span {
+            .detail {
                 cursor: pointer;
                 color: rgb(38, 160, 231);
             }
@@ -60,4 +60,8 @@
             }
         }
     }
+}
+
+input [type='text'] {
+    border: none !important;
 }
