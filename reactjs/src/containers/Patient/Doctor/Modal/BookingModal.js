@@ -10,7 +10,7 @@ const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal }) => 
                 <b>Thông tin đặt lệnh khám bệnh</b>
             </ModalHeader>
             <ModalBody>
-                <ProfileDoctor />
+                <ProfileDoctor isShowDescription={false} dataScheduleTimeModal={dataScheduleTimeModal} />
                 <div className="row g-3">
                     <div className="col-6">
                         <label className="form-label">Họ tên</label>
