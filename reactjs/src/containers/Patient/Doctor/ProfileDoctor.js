@@ -56,7 +56,12 @@ const ProfileDoctor = ({ language }) => {
                 {language === LANGUAGES.VI && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
                     <span>{dataProfile.Doctor_Info.priceTypeData.valueVi} VND</span>
                 ) : (
+                    ''
+                )}
+                {language === LANGUAGES.EN && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
                     <span>${dataProfile.Doctor_Info.priceTypeData.valueEn}</span>
+                ) : (
+                    ''
                 )}
             </div>
         </div>
