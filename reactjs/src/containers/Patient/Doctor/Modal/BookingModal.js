@@ -1,13 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './BookingModal.scss';
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'reactstrap';
+import ProfileDoctor from '../ProfileDoctor';
 
 const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal }) => {
     return (
         <Modal isOpen={isOpenModalBooking} toggle={toggle} size="lg" centered>
-            <ModalHeader toggle={toggle}>Thông tin đặt lệnh khám bệnh</ModalHeader>
+            <ModalHeader toggle={toggle}>
+                <b>Thông tin đặt lệnh khám bệnh</b>
+            </ModalHeader>
             <ModalBody>
+                <ProfileDoctor />
                 <div className="row g-3">
                     <div className="col-6">
                         <label className="form-label">Họ tên</label>
