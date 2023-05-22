@@ -80,6 +80,20 @@
             "detail": "More",
             "payment": "Patient can pay by:",
             "hide": "Hide"
+        },
+        "booking-modal": {
+            "title": "Booking Info",
+            "fullname": "Full name",
+            "phoneNumber": "Phone number",
+            "email": "Email",
+            "address": "Address",
+            "reason": "Reason",
+            "birthday": "Date of birth",
+            "gender": "Sex",
+            "confirm": "Confirm",
+            "cancel": "Cancel",
+            "free": "Free booking",
+            "price": "Price:"
         }
     },
     "admin": {

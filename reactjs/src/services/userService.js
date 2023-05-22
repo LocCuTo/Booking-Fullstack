@@ -56,6 +56,10 @@ const getProfileDoctorByIdAPI = (doctorId) => {
     return axios.get(`/api/get-profile-doctor-by-id?doctorId=${doctorId}`);
 };
 
+const postPatientAppointmentAPI = (data) => {
+    return axios.post('/api/patient-book-appointment', data);
+};
+
 export {
     handleLoginAPI,
     getAllUsersAPI,
@@ -71,4 +75,5 @@ export {
     getScheduleDoctorByDateAPI,
     getExtraInfoDoctorByIdAPI,
     getProfileDoctorByIdAPI,
+    postPatientAppointmentAPI,
 };

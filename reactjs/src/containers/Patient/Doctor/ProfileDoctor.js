@@ -6,6 +6,7 @@ import { getProfileDoctorByIdAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils';
 import _ from 'lodash';
 import moment from 'moment';
+import { FormattedMessage } from 'react-intl';
 
 const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal }) => {
     let nameVi,
@@ -42,14 +43,15 @@ const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal }) =
                     <div>
                         {date} {time}
                     </div>
-                    <div>Miễn phí đặt lịch</div>
+                    <div>
+                        <FormattedMessage id="patient.booking-modal.free" />
+                    </div>
                 </>
             );
         }
         return;
     };
 
-    console.log(dataScheduleTimeModal);
     if (dataProfile && dataProfile.positionData) {
         nameVi = `${dataProfile.positionData.valueVi}, ${dataProfile.lastName} ${dataProfile.firstName}`;
         nameEn = `${dataProfile.positionData.valueEn}, ${dataProfile.firstName} ${dataProfile.lastName}`;
@@ -84,7 +86,7 @@ const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal }) =
                 </div>
             </div>
             <div>
-                Giá khám:{' '}
+                <FormattedMessage id="patient.booking-modal.price" />{' '}
                 {language === LANGUAGES.VI && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
                     <span>{dataProfile.Doctor_Info.priceTypeData.valueVi} VND</span>
                 ) : (
