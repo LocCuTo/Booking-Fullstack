@@ -6,7 +6,7 @@ import DatePicker from '../../../../components/Input/DatePicker';
 import * as actions from '../../../../store/actions';
 import { LANGUAGES } from '../../../../utils';
 import Select from 'react-select';
-import { useParams } from 'react-router-dom';
+import _ from 'lodash';
 import { postPatientAppointmentAPI } from '../../../../services/userService';
 import { toast } from 'react-toastify';
 import { FormattedMessage } from 'react-intl';
@@ -54,8 +54,32 @@ const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal, fetch
         setInfo({ ...info, selectedGender: selectedOption });
     };
 
+    const buildTimeBooking = (data) => {
+        if (data && !_.isEmpty(data)) {
+            let time = language === LANGUAGES.VI ? data.timeTypeData.valueVi : data.timeTypeData.valueEn;
+            let date = language === LANGUAGES.VI ? data.date : data.date.split('/').reverse().join('/');
+
+            return `${time} - ${date}`;
+        }
+        return '';
+    };
+
+    const buildDoctorName = (data) => {
+        if (data && !_.isEmpty(data)) {
+            let name =
+                language === LANGUAGES.VI
+                    ? `${data.doctorData.lastName} ${data.doctorData.firstName}`
+                    : `${data.doctorData.firstName} ${data.doctorData.lastName}`;
+
+            return name;
+        }
+        return '';
+    };
+
     const handleConfirmBooking = async () => {
         let date = new Date(info.birthday).getTime();
+        let timeSting = buildTimeBooking(dataScheduleTimeModal);
+        let doctorName = buildDoctorName(dataScheduleTimeModal);
         let res = await postPatientAppointmentAPI({
             fullName: info.fullName,
             phoneNumber: info.phoneNumber,
@@ -64,8 +88,11 @@ const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal, fetch
             reason: info.reason,
             selectedGender: info.selectedGender.value,
             date: date,
+            doctorName: doctorName,
             doctorId: info.doctorId,
             timeType: info.timeType,
+            language: language,
+            timeString: timeSting,
         });
         if (res && res.errCode === 0) {
             toast.success('Booking Created!!!', {

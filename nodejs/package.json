@@ -24,7 +24,8 @@
         "moment": "^2.29.4",
         "mysql2": "^3.2.4",
         "nodemailer": "^6.9.2",
-        "sequelize": "^6.31.1"
+        "sequelize": "^6.31.1",
+        "uuid": "^9.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.21.8",
