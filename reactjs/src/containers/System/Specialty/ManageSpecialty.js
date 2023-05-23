@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import './ManageSpecialty.scss';
 import { connect } from 'react-redux';
 import MarkdownIt from 'markdown-it';
@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 const ManageSpecialty = () => {
     const mdParser = new MarkdownIt(/* Markdown-it options */);
+    const aRef = useRef(null);
 
     const [info, setInfo] = useState({
         name: '',
@@ -16,6 +17,10 @@ const ManageSpecialty = () => {
         descriptionHTML: '',
         descriptionMarkdown: '',
     });
+
+    const resetInput = () => {
+        aRef.current.value = null;
+    };
 
     const handleOnChangeInput = (e, id) => {
         let stateCopy = { ...info };
@@ -37,6 +42,8 @@ const ManageSpecialty = () => {
         if (file) {
             let base64 = await CommonUtils.getBase64(file);
             setInfo({ ...info, imageBase64: base64 });
+        } else {
+            return;
         }
     };
 
@@ -59,6 +66,7 @@ const ManageSpecialty = () => {
                 descriptionHTML: '',
                 descriptionMarkdown: '',
             });
+            aRef.current.value = null;
         } else {
             toast.error('Something went wrong!!!', {
                 position: 'top-right',
@@ -88,7 +96,7 @@ const ManageSpecialty = () => {
                 </div>
                 <div className="col-6 form-group">
                     <label className="form-label">Ảnh chuyên khoa</label>
-                    <input className="form-control" type="file" onChange={(e) => handleOnChangeImage(e)} />
+                    <input ref={aRef} className="form-control" type="file" onChange={(e) => handleOnChangeImage(e)} />
                 </div>
                 <div className="col-12">
                     <MdEditor
