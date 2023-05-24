@@ -140,7 +140,11 @@ const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal, fetch
                 </b>
             </ModalHeader>
             <ModalBody>
-                <ProfileDoctor isShowDescription={false} dataScheduleTimeModal={dataScheduleTimeModal} />
+                <ProfileDoctor
+                    isShowDescription={false}
+                    doctorId={dataScheduleTimeModal.doctorId}
+                    dataScheduleTimeModal={dataScheduleTimeModal}
+                />
                 <div className="row g-3">
                     <div className="col-6">
                         <label className="form-label">

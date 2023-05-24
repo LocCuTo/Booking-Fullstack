@@ -53,10 +53,10 @@ const DetailDoctor = ({ language }) => {
                 </div>
                 <div className="schedule-doctor">
                     <div className="content-left">
-                        <DoctorSchedule />
+                        <DoctorSchedule doctorIdFromParent={detailDoctor.id} />
                     </div>
                     <div className="content-right">
-                        <DoctorExtraInfo />
+                        <DoctorExtraInfo doctorIdFromParent={detailDoctor.id} />
                     </div>
                 </div>
                 <div className="detail-info-doctor">

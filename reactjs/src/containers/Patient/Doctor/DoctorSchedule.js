@@ -5,12 +5,10 @@ import moment from 'moment';
 import { LANGUAGES } from '../../../utils';
 import localization from 'moment/locale/vi';
 import { getScheduleDoctorByDateAPI } from '../../../services/userService';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
 import { FormattedMessage } from 'react-intl';
 import BookingModal from './Modal/BookingModal';
 
-const DoctorSchedule = ({ language }) => {
-    const params = useParams();
+const DoctorSchedule = ({ language, doctorIdFromParent }) => {
     const [allDays, setAllDays] = useState([]);
     const [allAvailableTime, setAllAvailableTime] = useState([]);
     const [dataScheduleTimeModal, setDataScheduleTimeModal] = useState({});
@@ -18,7 +16,7 @@ const DoctorSchedule = ({ language }) => {
 
     const handleOnChangeSelect = async (e) => {
         let date = e.target.value;
-        let doctorId = params.id;
+        let doctorId = doctorIdFromParent;
         let res = await getScheduleDoctorByDateAPI(doctorId, date);
         if (res && res.errCode === 0) {
             setAllAvailableTime(res.data ? res.data : []);
@@ -61,7 +59,7 @@ const DoctorSchedule = ({ language }) => {
     const displayTodaySchedule = async () => {
         let arrDays = getSchedule();
         if (arrDays && arrDays.length > 0) {
-            let doctorId = params.id;
+            let doctorId = doctorIdFromParent;
             let res = await getScheduleDoctorByDateAPI(doctorId, arrDays[0].value);
             setAllAvailableTime(res.data ? res.data : []);
         }
@@ -83,7 +81,7 @@ const DoctorSchedule = ({ language }) => {
 
     useEffect(() => {
         displayTodaySchedule();
-    }, []);
+    }, [doctorIdFromParent]);
 
     return (
         <>

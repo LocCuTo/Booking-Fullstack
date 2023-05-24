@@ -8,10 +8,9 @@ import _ from 'lodash';
 import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
 
-const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal }) => {
+const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal, doctorId }) => {
     let nameVi,
         nameEn = '';
-    const params = useParams();
 
     const [dataProfile, setDataProfile] = useState({});
 
@@ -58,8 +57,8 @@ const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal }) =
     }
 
     useEffect(() => {
-        getProfileDoctor(params.id);
-    }, [params.id]);
+        getProfileDoctor(doctorId);
+    }, [doctorId]);
 
     return (
         <div className="profile-doctor-container">

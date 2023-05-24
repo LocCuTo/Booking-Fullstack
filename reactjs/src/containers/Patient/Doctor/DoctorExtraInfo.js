@@ -6,8 +6,7 @@ import { getExtraInfoDoctorByIdAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils/constant';
 import { FormattedMessage } from 'react-intl';
 
-const DoctorExtraInfo = ({ language }) => {
-    const params = useParams();
+const DoctorExtraInfo = ({ language, doctorIdFromParent }) => {
     const [isShowDetailInfo, setIsShowDetailInfo] = useState(false);
     const [extraInfo, setExtraInfo] = useState({});
 
@@ -23,8 +22,8 @@ const DoctorExtraInfo = ({ language }) => {
     };
 
     useEffect(() => {
-        showExtraInfo(params.id);
-    }, [params.id]);
+        showExtraInfo(doctorIdFromParent);
+    }, [doctorIdFromParent]);
 
     return (
         <div className="doctor-extra-info-container">
