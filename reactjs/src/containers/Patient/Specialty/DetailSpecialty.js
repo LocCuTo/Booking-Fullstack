@@ -1,18 +1,82 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './DetailSpecialty.scss';
 import { connect } from 'react-redux';
 import HomeHeader from '../../HomePage/HomeHeader';
 import DoctorSchedule from '../Doctor/DoctorSchedule';
 import DoctorExtraInfo from '../Doctor/DoctorExtraInfo';
 import ProfileDoctor from '../Doctor/ProfileDoctor';
+import { useParams } from 'react-router-dom';
+import { getAllCodeAPI, getDetailSpecialtyByIdAPI } from '../../../services/userService';
+import _ from 'lodash';
+import { LANGUAGES } from '../../../utils';
 
-const DetailSpecialty = () => {
-    const [arrDoctorId, setArrDoctorId] = useState([9, 10]);
+const DetailSpecialty = ({ language }) => {
+    const params = useParams();
+
+    const [arrDoctorId, setArrDoctorId] = useState([]);
+    const [listProvince, setListProvince] = useState([]);
+    const [dataDetailSpecialty, setDataDetailSpecialty] = useState({});
+
+    const getDetailSpecialty = async () => {
+        let res = await getDetailSpecialtyByIdAPI({
+            id: params.id,
+            location: 'ALL',
+        });
+        if (res && res.errCode === 0) {
+            let data = res.data;
+            let doctorIdArr = [];
+            if (data && !_.isEmpty(data)) {
+                let arr = data.doctorSpecialty;
+                if (arr && arr.length > 0) {
+                    arr.map((item) => {
+                        doctorIdArr.push(item.doctorId);
+                    });
+                }
+            }
+            setArrDoctorId(doctorIdArr);
+            setDataDetailSpecialty(res.data);
+        }
+    };
+
+    const getProvince = async () => {
+        let res = await getAllCodeAPI('PROVINCE');
+        if (res && res.errCode === 0) {
+            setListProvince(res.data);
+        }
+    };
+
+    const handleOnChangeSelect = (e) => {};
+
+    useEffect(() => {
+        getDetailSpecialty();
+    }, [params]);
+
+    useEffect(() => {
+        getProvince();
+    }, []);
+
     return (
         <div className="detail-specialty-container">
             <HomeHeader />
             <div className="detail-specialty-body">
-                <div className="description-specialty"></div>
+                <div className="description-specialty">
+                    {dataDetailSpecialty && !_.isEmpty(dataDetailSpecialty) && (
+                        <div dangerouslySetInnerHTML={{ __html: dataDetailSpecialty.descriptionHTML }}></div>
+                    )}
+                </div>
+                <div className="search-sp-doctor">
+                    <select onChange={(e) => handleOnChangeSelect(e)}>
+                        {listProvince &&
+                            listProvince.length > 0 &&
+                            listProvince.map((item, i) => {
+                                return (
+                                    <option key={i} value={item.keyMap}>
+                                        {language === LANGUAGES.VI ? item.valueVi : item.valueEn}
+                                    </option>
+                                );
+                            })}
+                    </select>
+                </div>
                 {arrDoctorId &&
                     arrDoctorId.length > 0 &&
                     arrDoctorId.map((item, i) => {
@@ -45,9 +109,7 @@ const DetailSpecialty = () => {
 
 const mapStateToProps = (state) => {
     return {
-        allDoctors: state.admin.doctors,
         language: state.app.language,
-        allRequiredDoctorInfo: state.admin.allRequiredDoctorInfo,
     };
 };
 

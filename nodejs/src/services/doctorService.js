@@ -96,7 +96,6 @@ let saveInfoDoctor = (data) => {
                 });
             } else {
                 // upsert to Markdown table
-                console.log(data);
                 if (data.action === 'CREATE') {
                     await db.Markdown.create({
                         contentHTML: data.contentHTML,

@@ -85,10 +85,12 @@ const ManageDoctor = ({
                 note = '',
                 paymentId = '',
                 priceId = '',
+                specialtyId = '',
                 provinceId = '',
                 findPayment = '',
                 findPrice = '',
-                findProvince = '';
+                findProvince = '',
+                findSpecialty = '';
 
             if (res.data.Doctor_Info) {
                 addressClinic = res.data.Doctor_Info.addressClinic;
@@ -97,10 +99,12 @@ const ManageDoctor = ({
                 paymentId = res.data.Doctor_Info.paymentId;
                 priceId = res.data.Doctor_Info.priceId;
                 provinceId = res.data.Doctor_Info.provinceId;
+                specialtyId = res.data.Doctor_Info.specialtyId;
 
                 findPayment = listPayment.find((item) => item.value === paymentId);
                 findPrice = listPrice.find((item) => item.value === priceId);
                 findProvince = listProvince.find((item) => item.value === provinceId);
+                findSpecialty = listSpecialty.find((item) => item.value === specialtyId);
             }
             setContentMarkdown(markdown.contentMarkdown);
             setContentHTML(markdown.contentHTML);
@@ -114,6 +118,7 @@ const ManageDoctor = ({
                 selectedPrice: findPrice,
                 selectedPayment: findPayment,
                 selectedProvince: findProvince,
+                selectedSpecialty: findSpecialty,
             });
             setHasOldData(true);
         } else {
@@ -129,6 +134,7 @@ const ManageDoctor = ({
                 selectedPrice: '',
                 selectedPayment: '',
                 selectedProvince: '',
+                selectedSpecialty: '',
             });
             setHasOldData(false);
         }
