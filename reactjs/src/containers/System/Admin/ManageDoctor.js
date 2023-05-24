@@ -31,16 +31,22 @@ const ManageDoctor = ({
     const [listPrice, setListPrice] = useState([]);
     const [listPayment, setListPayment] = useState([]);
     const [listProvince, setListProvince] = useState([]);
+    const [listClinic, setListClinic] = useState([]);
+    const [listSpecialty, setListSpecialty] = useState([]);
     const [selected, setSelected] = useState({
         selectedPrice: '',
         selectedProvince: '',
         selectedPayment: '',
+        selectedClinic: '',
+        selectedSpecialty: '',
     });
     const [info, setInfo] = useState({
         nameClinic: '',
         addressClinic: '',
         note: '',
         description: '',
+        clinicId: '',
+        specialtyId: '',
     });
 
     const handleEditorChange = ({ html, text }) => {
@@ -62,6 +68,9 @@ const ManageDoctor = ({
             nameClinic: info.nameClinic,
             addressClinic: info.addressClinic,
             note: info.note,
+            clinicId: selected.selectedClinic && selected.selectedClinic.value ? selected.selectedClinic.value : '',
+            specialtyId:
+                selected.selectedSpecialty && selected.selectedSpecialty.value ? selected.selectedSpecialty.value : '',
         });
     };
 
@@ -175,6 +184,15 @@ const ManageDoctor = ({
                     result.push(object);
                 });
             }
+            if (type === 'SPECIALTY') {
+                data.map((item, i) => {
+                    let object = {};
+
+                    object.label = item.name;
+                    object.value = item.id;
+                    result.push(object);
+                });
+            }
         }
 
         return result;
@@ -186,11 +204,12 @@ const ManageDoctor = ({
     }, [fetchAllDoctors, getRequiredDoctorInfo]);
 
     useEffect(() => {
-        let { resPrice, resPayment, resProvince } = allRequiredDoctorInfo;
+        let { resPrice, resPayment, resProvince, resSpecialty } = allRequiredDoctorInfo;
         setListDoctors(buildDataInputSelect(allDoctors, 'USERS'));
         setListPrice(buildDataInputSelect(resPrice, 'PRICE'));
         setListPayment(buildDataInputSelect(resPayment, 'PAYMENT'));
         setListProvince(buildDataInputSelect(resProvince, 'PROVINCE'));
+        setListSpecialty(buildDataInputSelect(resSpecialty, 'SPECIALTY'));
     }, [allDoctors, language, allRequiredDoctorInfo]);
 
     return (
@@ -204,7 +223,7 @@ const ManageDoctor = ({
                         <FormattedMessage id="admin.manage-doctor.select" />
                     </label>
                     <Select
-                        placeholder="Chọn bác sĩ"
+                        placeholder={<FormattedMessage id="admin.manage-doctor.select" />}
                         value={selectedDoctor}
                         onChange={handleChangeSelect}
                         options={listDoctors}
@@ -286,6 +305,30 @@ const ManageDoctor = ({
                     </label>
                     <input value={info.note} className="form-control" onChange={(e) => handleOnChangeText(e, 'note')} />
                 </div>
+                <div className="col-4 form-group">
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.speciality" />
+                    </label>
+                    <Select
+                        placeholder={<FormattedMessage id="admin.manage-doctor.speciality" />}
+                        value={selected.selectedSpecialty}
+                        onChange={handleChageSelectDoctorInfo}
+                        options={listSpecialty}
+                        name="selectedSpecialty"
+                    />
+                </div>
+                <div className="col-4 form-group">
+                    <label className="form-label">
+                        <FormattedMessage id="admin.manage-doctor.clinic" />
+                    </label>
+                    <Select
+                        placeholder={<FormattedMessage id="admin.manage-doctor.clinic" />}
+                        value={selected.selectedClinic}
+                        onChange={handleChageSelectDoctorInfo}
+                        options={listClinic}
+                        name="selectedClinic"
+                    />
+                </div>
             </div>
 
             <div className="manage-doctor-editor">
@@ -296,6 +339,7 @@ const ManageDoctor = ({
                     value={contentMarkdown}
                 />
             </div>
+
             <button
                 className={hasOldData === true ? 'btn btn-warning mt-3' : 'btn btn-primary mt-3'}
                 onClick={() => handleSaveContentMarkdown()}

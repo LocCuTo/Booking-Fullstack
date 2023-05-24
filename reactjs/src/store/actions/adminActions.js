@@ -4,6 +4,7 @@ import {
     editUserServiceAPI,
     getAllCodeAPI,
     getAllDoctorsAPI,
+    getAllSpecialtyAPI,
     getAllUsersAPI,
     getTopDoctorAPI,
     saveDetailDoctorAPI,
@@ -367,18 +368,22 @@ export const getRequiredDoctorInfo = () => {
             let resPrice = await getAllCodeAPI('PRICE');
             let resProvince = await getAllCodeAPI('PROVINCE');
             let resPayment = await getAllCodeAPI('PAYMENT');
+            let resSpecialty = await getAllSpecialtyAPI();
             if (
                 resPrice &&
                 resPrice.errCode === 0 &&
                 resProvince &&
                 resProvince.errCode === 0 &&
                 resPayment &&
-                resPayment.errCode === 0
+                resPayment.errCode === 0 &&
+                resSpecialty &&
+                resSpecialty.errCode === 0
             ) {
                 let data = {
                     resPrice: resPrice.data,
                     resPayment: resPayment.data,
                     resProvince: resProvince.data,
+                    resSpecialty: resSpecialty.data,
                 };
                 dispatch({ type: actionTypes.FETCH_REQUIRED_DOCTOR_INFO_SUCCESS, data });
             } else {

@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import Slider from 'react-slick';
 import { getAllSpecialtyAPI } from '../../../services/userService';
 import { FormattedMessage } from 'react-intl';
+import { withRouter } from 'react-router-dom';
 
-const Specialty = ({ settings }) => {
+const Specialty = ({ settings, history }) => {
     const [arrSpecialty, setArrSpecialty] = useState([]);
 
     const getAllSpecialty = async () => {
@@ -13,6 +14,11 @@ const Specialty = ({ settings }) => {
         if (res && res.errCode === 0) {
             setArrSpecialty(res.data);
         }
+    };
+
+    const handleViewDetailSpecialty = (specialty) => {
+        // props history của withRouter
+        history.push(`/detail-specialty/${specialty.id}`);
     };
 
     useEffect(() => {
@@ -36,7 +42,11 @@ const Specialty = ({ settings }) => {
                             arrSpecialty.length > 0 &&
                             arrSpecialty.map((item, i) => {
                                 return (
-                                    <div className="section-customize specialty-child" key={i}>
+                                    <div
+                                        className="section-customize specialty-child"
+                                        onClick={() => handleViewDetailSpecialty(item)}
+                                        key={i}
+                                    >
                                         <div
                                             className="bg-image section-specialty"
                                             style={{ backgroundImage: `url(${item.image})` }}
@@ -63,4 +73,4 @@ const mapDispatchToProps = (dispatch) => {
     return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Specialty);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Specialty));
