@@ -41,11 +41,44 @@ const DetailSpecialty = ({ language }) => {
     const getProvince = async () => {
         let res = await getAllCodeAPI('PROVINCE');
         if (res && res.errCode === 0) {
-            setListProvince(res.data);
+            let data = res.data;
+            if (data && data.length > 0) {
+                data.unshift({
+                    createdAt: null,
+                    keyMap: 'ALL',
+                    type: 'PROVINCE',
+                    valueEn: 'All',
+                    valueVi: 'Toàn quốc',
+                });
+            }
+            setListProvince(data ? data : '');
         }
     };
 
-    const handleOnChangeSelect = (e) => {};
+    const handleOnChangeSelect = async (e) => {
+        if (params.id) {
+            let location = e.target.value;
+            let res = await getDetailSpecialtyByIdAPI({
+                id: params.id,
+                location,
+            });
+
+            if (res && res.errCode === 0) {
+                let data = res.data;
+                let doctorIdArr = [];
+                if (data && !_.isEmpty(data)) {
+                    let arr = data.doctorSpecialty;
+                    if (arr && arr.length > 0) {
+                        arr.map((item) => {
+                            doctorIdArr.push(item.doctorId);
+                        });
+                    }
+                }
+                setArrDoctorId(doctorIdArr);
+                setDataDetailSpecialty(res.data);
+            }
+        }
+    };
 
     useEffect(() => {
         getDetailSpecialty();
@@ -88,6 +121,8 @@ const DetailSpecialty = ({ language }) => {
                                             isShowDescription={true}
                                             // dataScheduleTimeModal={dataScheduleTimeModal}
                                             doctorId={item}
+                                            isShowLinkDetail={true}
+                                            isShowPrice={false}
                                         />
                                     </div>
                                 </div>

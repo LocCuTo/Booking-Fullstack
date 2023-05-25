@@ -144,6 +144,8 @@ const BookingModal = ({ isOpenModalBooking, toggle, dataScheduleTimeModal, fetch
                     isShowDescription={false}
                     doctorId={dataScheduleTimeModal.doctorId}
                     dataScheduleTimeModal={dataScheduleTimeModal}
+                    isShowLinkDetail={false}
+                    isShowPrice={true}
                 />
                 <div className="row g-3">
                     <div className="col-6">

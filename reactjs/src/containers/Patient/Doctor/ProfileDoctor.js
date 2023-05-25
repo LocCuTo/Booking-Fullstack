@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import './ProfileDoctor.scss';
-import { useParams } from 'react-router-dom';
 import { getProfileDoctorByIdAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils';
 import _ from 'lodash';
-import moment from 'moment';
 import { FormattedMessage } from 'react-intl';
+import { Link } from 'react-router-dom';
 
-const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal, doctorId }) => {
+const ProfileDoctor = ({
+    language,
+    isShowDescription,
+    dataScheduleTimeModal,
+    doctorId,
+    isShowLinkDetail,
+    isShowPrice,
+}) => {
     let nameVi,
         nameEn = '';
 
@@ -84,19 +90,26 @@ const ProfileDoctor = ({ language, isShowDescription, dataScheduleTimeModal, doc
                     </div>
                 </div>
             </div>
-            <div>
-                <FormattedMessage id="patient.booking-modal.price" />{' '}
-                {language === LANGUAGES.VI && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
-                    <span>{dataProfile.Doctor_Info.priceTypeData.valueVi} VND</span>
-                ) : (
-                    ''
-                )}
-                {language === LANGUAGES.EN && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
-                    <span>${dataProfile.Doctor_Info.priceTypeData.valueEn}</span>
-                ) : (
-                    ''
-                )}
-            </div>
+            {isShowLinkDetail === true && (
+                <div className="view-detail-doctor">
+                    <Link to={`/detail-doctor/${doctorId}`}>Xem thêm</Link>
+                </div>
+            )}
+            {isShowPrice === true && (
+                <div className="price">
+                    <FormattedMessage id="patient.booking-modal.price" />{' '}
+                    {language === LANGUAGES.VI && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
+                        <span>{dataProfile.Doctor_Info.priceTypeData.valueVi} VND</span>
+                    ) : (
+                        ''
+                    )}
+                    {language === LANGUAGES.EN && dataProfile.Doctor_Info && dataProfile.Doctor_Info.priceTypeData ? (
+                        <span>${dataProfile.Doctor_Info.priceTypeData.valueEn}</span>
+                    ) : (
+                        ''
+                    )}
+                </div>
+            )}
         </div>
     );
 };
