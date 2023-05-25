@@ -74,7 +74,13 @@ const ProfileDoctor = ({
                     style={{
                         backgroundImage: `url(${dataProfile && dataProfile.image ? dataProfile.image : ''})`,
                     }}
-                ></div>
+                >
+                    {isShowLinkDetail === true && (
+                        <div className="view-detail-doctor">
+                            <Link to={`/detail-doctor/${doctorId}`}>Xem thêm</Link>
+                        </div>
+                    )}
+                </div>
                 <div className="content-right">
                     <div className="up">{language === LANGUAGES.VI ? nameVi : nameEn}</div>
                     <div className="down">
@@ -90,11 +96,7 @@ const ProfileDoctor = ({
                     </div>
                 </div>
             </div>
-            {isShowLinkDetail === true && (
-                <div className="view-detail-doctor">
-                    <Link to={`/detail-doctor/${doctorId}`}>Xem thêm</Link>
-                </div>
-            )}
+
             {isShowPrice === true && (
                 <div className="price">
                     <FormattedMessage id="patient.booking-modal.price" />{' '}
