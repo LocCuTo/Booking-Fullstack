@@ -86,11 +86,13 @@ const ManageDoctor = ({
                 paymentId = '',
                 priceId = '',
                 specialtyId = '',
+                clinicId = '',
                 provinceId = '',
                 findPayment = '',
                 findPrice = '',
                 findProvince = '',
-                findSpecialty = '';
+                findSpecialty = '',
+                findClinic = '';
 
             if (res.data.Doctor_Info) {
                 addressClinic = res.data.Doctor_Info.addressClinic;
@@ -100,11 +102,13 @@ const ManageDoctor = ({
                 priceId = res.data.Doctor_Info.priceId;
                 provinceId = res.data.Doctor_Info.provinceId;
                 specialtyId = res.data.Doctor_Info.specialtyId;
+                clinicId = res.data.Doctor_Info.clinicId;
 
                 findPayment = listPayment.find((item) => item.value === paymentId);
                 findPrice = listPrice.find((item) => item.value === priceId);
                 findProvince = listProvince.find((item) => item.value === provinceId);
                 findSpecialty = listSpecialty.find((item) => item.value === specialtyId);
+                findClinic = listClinic.find((item) => item.value === clinicId);
             }
             setContentMarkdown(markdown.contentMarkdown);
             setContentHTML(markdown.contentHTML);
@@ -119,6 +123,7 @@ const ManageDoctor = ({
                 selectedPayment: findPayment,
                 selectedProvince: findProvince,
                 selectedSpecialty: findSpecialty,
+                selectedClinic: findClinic,
             });
             setHasOldData(true);
         } else {
@@ -135,6 +140,7 @@ const ManageDoctor = ({
                 selectedPayment: '',
                 selectedProvince: '',
                 selectedSpecialty: '',
+                selectedClinic: '',
             });
             setHasOldData(false);
         }
@@ -190,7 +196,7 @@ const ManageDoctor = ({
                     result.push(object);
                 });
             }
-            if (type === 'SPECIALTY') {
+            if (type === 'SPECIALTY' || type === 'CLINIC') {
                 data.map((item, i) => {
                     let object = {};
 
@@ -210,12 +216,13 @@ const ManageDoctor = ({
     }, [fetchAllDoctors, getRequiredDoctorInfo]);
 
     useEffect(() => {
-        let { resPrice, resPayment, resProvince, resSpecialty } = allRequiredDoctorInfo;
+        let { resPrice, resPayment, resProvince, resSpecialty, resClinic } = allRequiredDoctorInfo;
         setListDoctors(buildDataInputSelect(allDoctors, 'USERS'));
         setListPrice(buildDataInputSelect(resPrice, 'PRICE'));
         setListPayment(buildDataInputSelect(resPayment, 'PAYMENT'));
         setListProvince(buildDataInputSelect(resProvince, 'PROVINCE'));
         setListSpecialty(buildDataInputSelect(resSpecialty, 'SPECIALTY'));
+        setListClinic(buildDataInputSelect(resClinic, 'CLINIC'));
     }, [allDoctors, language, allRequiredDoctorInfo]);
 
     return (
