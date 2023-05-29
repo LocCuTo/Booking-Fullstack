@@ -1,6 +1,6 @@
 const db = require('../models');
 require('dotenv').config();
-import _ from 'lodash';
+import _, { includes } from 'lodash';
 import moment from 'moment';
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
@@ -380,6 +380,43 @@ let getProfileDoctorById = (doctorId) => {
     });
 };
 
+let getListPatientForDoctor = (doctorId, date) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!doctorId || !date) {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Missing required parameter',
+                });
+            } else {
+                let data = await db.Booking.findAll({
+                    where: {
+                        statusId: 'S2',
+                        doctorId,
+                        date,
+                    },
+                    include: [
+                        {
+                            model: db.User,
+                            attributes: ['email', 'firstName', 'address', 'gender'],
+                            as: 'patientData',
+                            include: [{ model: db.Allcode, as: 'genderData', attributes: ['valueEn', 'valueVi'] }],
+                        },
+                    ],
+                    raw: false,
+                    nest: true,
+                });
+                resolve({
+                    errCode: 0,
+                    data,
+                });
+            }
+        } catch (e) {
+            reject(e);
+        }
+    });
+};
+
 module.exports = {
     getTopDoctor,
     getAllDoctors,
@@ -389,4 +426,5 @@ module.exports = {
     getScheduleByDate,
     getExtraInfoDoctorById,
     getProfileDoctorById,
+    getListPatientForDoctor,
 };
