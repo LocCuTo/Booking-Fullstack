@@ -164,9 +164,7 @@ const ManagePatient = ({ user, language }) => {
                 closeRemedyToggle={closeRemedyToggle}
                 sendRemedy={sendRemedy}
             />
-            <LoadingOverlay active={isShowLoading} spinner text="Loading your content...">
-                <p>Loading...</p>
-            </LoadingOverlay>
+            <LoadingOverlay active={isShowLoading} spinner text="Loading..."></LoadingOverlay>
         </>
     );
 };
