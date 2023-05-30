@@ -3,146 +3,171 @@ import './ManagePatient.scss';
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import DatePicker from '../../../components/Input/DatePicker';
-import { getListPatientDoctorAPI } from '../../../services/userService';
+import { getListPatientDoctorAPI, sendRemedyAPI } from '../../../services/userService';
 import moment from 'moment';
-import { LANGUAGES } from '../../../utils';
+import { LANGUAGES, dateFormat } from '../../../utils';
+import RemedyModal from './RemedyModal';
+import { toast } from 'react-toastify';
+import LoadingOverlay from 'react-loading-overlay';
 
 const ManagePatient = ({ user, language }) => {
-    const [allDays, setAllDays] = useState([]);
+    const [currentDate, setCurrentDate] = useState(new Date());
     const [dataPatient, setDataPatient] = useState([]);
+    const [isOpenRemedyModal, setIsOpemRemedyOpen] = useState(false);
+    const [dataModal, setDataModal] = useState({});
+    const [isShowLoading, setIsShowLoading] = useState(false);
 
-    const capitalizeFirstLetter = (string) => {
-        return string.charAt(0).toUpperCase() + string.slice(1);
-    };
-
-    const getSchedule = () => {
-        let arrDays = [];
-        for (let i = 0; i < 7; i++) {
-            let object = {};
-            if (language === LANGUAGES.VI) {
-                if (i === 0) {
-                    let ddMM = moment(new Date()).format('DD/MM');
-                    let today = `Hôm nay - ${ddMM}`;
-                    object.label = today;
-                } else {
-                    let labelVi = moment(new Date()).add(i, 'days').format('dddd - DD/MM');
-                    object.label = capitalizeFirstLetter(labelVi);
-                }
-            } else {
-                if (i === 0) {
-                    let ddMM = moment(new Date()).format('DD/MM');
-                    let today = `Today - ${ddMM}`;
-                    object.label = today;
-                } else {
-                    object.label = moment(new Date()).add(i, 'days').locale('en').format('ddd - DD/MM');
-                }
-            }
-            object.date = moment(new Date()).add(i, 'days').startOf('day').format('DD/MM/YYYY');
-
-            arrDays.push(object);
-        }
-        return arrDays;
+    const closeRemedyToggle = () => {
+        setIsOpemRemedyOpen(false);
+        setDataModal({});
     };
 
     const getPatientData = async (e) => {
-        let arrDays = getSchedule();
-        if (arrDays && arrDays.length > 0) {
-            let doctorId = user.id;
-            let res = await getListPatientDoctorAPI(doctorId, arrDays[0].date);
-            if (res && res.errCode === 0) {
-                setDataPatient(res.data);
-            }
-        }
-    };
-
-    const handleOnChangeSelect = async (e) => {
-        let date = e.target.value;
+        let formattedDate = moment(currentDate).format(dateFormat.SEND_TO_SERVER);
         let doctorId = user.id;
-        let res = await getListPatientDoctorAPI(doctorId, date);
+        let res = await getListPatientDoctorAPI(doctorId, formattedDate);
         if (res && res.errCode === 0) {
             setDataPatient(res.data);
         }
     };
 
-    const handleBtnConfirm = () => {};
+    const handleOnChangeDatePicker = (date) => {
+        setCurrentDate(date[0]);
+    };
 
-    const handleBtnSend = () => {};
+    const handleBtnConfirm = (item) => {
+        let data = {
+            doctorId: item.doctorId,
+            patientId: item.patientId,
+            email: item.patientData.email,
+            timeType: item.timeType,
+            patientName: item.patientData.firstName,
+        };
+        setIsOpemRemedyOpen(true);
+        setDataModal(data);
+    };
 
-    useEffect(() => {
-        let arrDays = getSchedule();
-        setAllDays(arrDays);
-    }, [language]);
+    const sendRemedy = async (dataFromModal) => {
+        // console.log(dataFromModal);
+        setIsShowLoading(true);
+        let res = await sendRemedyAPI({
+            ...dataFromModal,
+            doctorId: dataModal.doctorId,
+            patientId: dataModal.patientId,
+            timeType: dataModal.timeType,
+            language,
+            patientName: dataModal.patientName,
+        });
+        if (res && res.errCode === 0) {
+            toast.success('Remedy sent!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            setIsShowLoading(false);
+            setIsOpemRemedyOpen(false);
+            await getPatientData();
+        } else {
+            toast.error('Something went wrong!!!', {
+                position: 'top-right',
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: 'colored',
+            });
+            setIsShowLoading(false);
+        }
+    };
 
     useEffect(() => {
         getPatientData();
-    }, [user.id]);
+    }, [user.id, currentDate]);
 
     return (
-        <div className="manage-patient-container">
-            <div className="m-p-title">
-                <FormattedMessage id="menu.doctor.manage-patient" />
-            </div>
-            <div className="m-p-body row g-3">
-                <div className="col-4">
-                    <label className="form-label mx-1">Chọn ngày khám</label>
-                    <div className="all-schedule">
-                        <select onChange={(e) => handleOnChangeSelect(e)}>
-                            {allDays &&
-                                allDays.length > 0 &&
-                                allDays.map((item, i) => {
-                                    return (
-                                        <option value={item.date} key={i}>
-                                            {item.label}
-                                        </option>
-                                    );
-                                })}
-                        </select>
+        <>
+            <div className="manage-patient-container">
+                <div className="m-p-title">
+                    <FormattedMessage id="menu.doctor.manage-patient" />
+                </div>
+                <div className="m-p-body row g-3">
+                    <div className="col-4">
+                        <label className="form-label mx-1">Chọn ngày khám</label>
+                        <DatePicker
+                            onChange={handleOnChangeDatePicker}
+                            className="form-control"
+                            value={currentDate}
+                            minDate={new Date()}
+                        />
+                    </div>
+                    <div className="col-12 table-manage-patient">
+                        <table style={{ width: '100%' }}>
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Thời gian</th>
+                                    <th>Họ tên</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Giới tính</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {dataPatient && dataPatient.length > 0 ? (
+                                    dataPatient.map((item, i) => {
+                                        let time =
+                                            language === LANGUAGES.VI
+                                                ? item.timeTypeDataPatient.valueVi
+                                                : item.timeTypeDataPatient.valueEn;
+                                        let gender =
+                                            language === LANGUAGES.VI
+                                                ? item.patientData.genderData.valueVi
+                                                : item.patientData.genderData.valueEn;
+                                        return (
+                                            <tr key={i}>
+                                                <td>{i + 1}</td>
+                                                <td>{time}</td>
+                                                <td>{item.patientData.firstName}</td>
+                                                <td>{item.patientData.address}</td>
+                                                <td>{gender}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn btn-primary"
+                                                        onClick={() => handleBtnConfirm(item)}
+                                                    >
+                                                        Xác nhận
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    <tr>
+                                        <td colSpan={6}>Không có bệnh nhân vào ngày này</td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <div className="col-12 table-manage-patient">
-                    <table style={{ width: '100%' }}>
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>Thời gian</th>
-                                <th>Họ tên</th>
-                                <th>Địa chỉ</th>
-                                <th>Giới tính</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {dataPatient && dataPatient.length > 0 ? (
-                                dataPatient.map((item, i) => {
-                                    return (
-                                        <tr key={i}>
-                                            <td>{i + 1}</td>
-                                            <td>{item.timeTypeDataPatient.valueVi}</td>
-                                            <td>{item.patientData.firstName}</td>
-                                            <td>{item.patientData.address}</td>
-                                            <td>{item.patientData.genderData.valueVi}</td>
-                                            <td>
-                                                <button
-                                                    className="btn btn-primary mx-2"
-                                                    onClick={() => handleBtnConfirm()}
-                                                >
-                                                    Xác nhận
-                                                </button>
-                                                <button className="btn btn-warning" onClick={() => handleBtnSend()}>
-                                                    Gửi hóa đơn
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                <b>Không có bệnh nhân vào ngày này</b>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
             </div>
-        </div>
+            <RemedyModal
+                isOpenModal={isOpenRemedyModal}
+                dataModal={dataModal}
+                closeRemedyToggle={closeRemedyToggle}
+                sendRemedy={sendRemedy}
+            />
+            <LoadingOverlay active={isShowLoading} spinner text="Loading your content...">
+                <p>Loading...</p>
+            </LoadingOverlay>
+        </>
     );
 };
 
