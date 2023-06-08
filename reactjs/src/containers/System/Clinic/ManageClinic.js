@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import MarkdownIt from 'markdown-it';
 import MdEditor from 'react-markdown-editor-lite';
 import CommonUtils from '../../../utils/CommonUtils';
-import { createNewClinicAPI, createNewSpecialtyAPI } from '../../../services/userService';
+import { createNewClinicAPI } from '../../../services/userService';
 import { toast } from 'react-toastify';
 
 const ManageClinic = () => {
@@ -46,7 +46,7 @@ const ManageClinic = () => {
     const handleSaveNewClinic = async () => {
         let res = await createNewClinicAPI(info);
         if (res && res.errCode === 0) {
-            toast.success('New Specialty Created!!!', {
+            toast.success('New Hospital Created!!!', {
                 position: 'top-right',
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -80,10 +80,10 @@ const ManageClinic = () => {
 
     return (
         <div className="manage-specialty-container">
-            <div className="ms-title">Quản lý phòng khám</div>
+            <div className="ms-title">Quản lý bệnh viện</div>
             <div className="add-new-specialty row g-3">
                 <div className="col-6 form-group">
-                    <label className="form-label">Tên phòng khám</label>
+                    <label className="form-label">Tên bệnh viện</label>
                     <input
                         className="form-control"
                         type="text"
@@ -92,11 +92,11 @@ const ManageClinic = () => {
                     />
                 </div>
                 <div className="col-6 form-group">
-                    <label className="form-label">Ảnh chuyên khoa</label>
+                    <label className="form-label">Ảnh bệnh viện</label>
                     <input ref={aRef} className="form-control" type="file" onChange={(e) => handleOnChangeImage(e)} />
                 </div>
                 <div className="col-6 form-group">
-                    <label className="form-label">Địa chỉ phòng khám</label>
+                    <label className="form-label">Địa chỉ bệnh viện</label>
                     <input
                         className="form-control"
                         type="text"

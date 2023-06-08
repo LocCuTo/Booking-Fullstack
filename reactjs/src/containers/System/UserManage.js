@@ -5,6 +5,7 @@ import { createNewUserAPI, deleteUserAPI, editUserServiceAPI, getAllUsersAPI } f
 import ModalUser from './ModalUser';
 import { emitter } from '../../utils/emitter';
 import ModalEditUser from './ModalEditUser';
+import { FormattedMessage } from 'react-intl';
 
 const UserManage = () => {
     const [arrUsers, setArrUsers] = useState([]);
@@ -94,7 +95,7 @@ const UserManage = () => {
             <div className="title text-center">Manage users</div>
             <div className="mx-1">
                 <button className="btn btn-primary px-3" onClick={() => handleAddNewUser()}>
-                    <i className="fas fa-plus"></i> Add new user
+                    <i className="fas fa-plus"></i> <FormattedMessage id="manage-user.add" />
                 </button>
             </div>
             <div className="users-table mt-3 mx-1">

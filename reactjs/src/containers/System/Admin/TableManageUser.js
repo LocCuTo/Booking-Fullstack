@@ -46,7 +46,7 @@ const TableManageUser = ({ fetchUserRedux, listUsers, deleteUserRedux, handleEdi
                         arrUsers.length > 0 &&
                         arrUsers.map((item, i) => {
                             return (
-                                <tr>
+                                <tr key={i}>
                                     <td>{item.email}</td>
                                     <td>{item.firstName}</td>
                                     <td>{item.lastName}</td>

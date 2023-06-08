@@ -7,6 +7,8 @@ import { getDetailInfoDoctorAPI } from '../../../services/userService';
 import { LANGUAGES } from '../../../utils';
 import DoctorSchedule from './DoctorSchedule';
 import DoctorExtraInfo from './DoctorExtraInfo';
+import LikeAndShare from '../SocialPlugin/LikeAndShare';
+import Comment from '../SocialPlugin/Comment';
 
 const DetailDoctor = ({ language }) => {
     let nameVi = '';
@@ -31,6 +33,9 @@ const DetailDoctor = ({ language }) => {
         getDetail(params.id);
     }, [params.id]);
 
+    // let currentURL =
+    //     process.env.REACT_APP_IS_LOCALHOST === 1 ? 'https://siuuuu-restaurant.herokuapp.com/' : window.location.href;
+
     return (
         <>
             <HomeHeader isShowBanner={false} />
@@ -48,6 +53,9 @@ const DetailDoctor = ({ language }) => {
                             {detailDoctor && detailDoctor.Markdown && detailDoctor.Markdown.description && (
                                 <span>{detailDoctor.Markdown.description}</span>
                             )}
+                            {/* <div className="like-share-plugin">
+                                <LikeAndShare dataRef={currentURL} />
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -64,6 +72,9 @@ const DetailDoctor = ({ language }) => {
                         <div dangerouslySetInnerHTML={{ __html: detailDoctor.Markdown.contentHTML }}></div>
                     )}
                 </div>
+                {/* <div className="comment-doctor">
+                    <Comment dataRef={currentURL} width={'100%'} />
+                </div> */}
                 <div className="comment-doctor"></div>
             </div>
         </>

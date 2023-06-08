@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './UserRedux.scss';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
@@ -22,6 +22,7 @@ const UserRedux = ({
     listUsers,
     editUserRedux,
 }) => {
+    const aRef = useRef(null);
     const [genderArr, setGenderArr] = useState([]);
     const [positionArr, setPositionArr] = useState([]);
     const [roleArr, setRoleArr] = useState([]);
@@ -81,6 +82,8 @@ const UserRedux = ({
         return isValid;
     };
 
+    console.log(user);
+
     const saveUser = () => {
         let isValid = checkValidateInput();
         if (isValid === false) return;
@@ -99,6 +102,7 @@ const UserRedux = ({
                 positionId: user.position,
                 avatar: user.avatar,
             });
+            aRef.current.value = null;
         }
         if (user.action === CRUD_ACTIONS.EDIT) {
             // fire redux edit user
@@ -334,7 +338,12 @@ const UserRedux = ({
                                 <FormattedMessage id="manage-user.image" />
                             </label>
                             <div className="preview-img-container">
-                                <input type="file" className="form-control" onChange={(e) => handleOnChangeImage(e)} />
+                                <input
+                                    ref={aRef}
+                                    type="file"
+                                    className="form-control"
+                                    onChange={(e) => handleOnChangeImage(e)}
+                                />
                                 <div
                                     className="preview-image"
                                     onClick={() => openPreviewImage()}

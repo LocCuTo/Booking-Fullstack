@@ -102,6 +102,8 @@ let saveInfoDoctor = (data) => {
                         contentMarkdown: data.contentMarkdown,
                         description: data.description,
                         doctorId: data.doctorId,
+                        specialtyId: data.specialtyId,
+                        clinicId: data.clinicId,
                     });
                 } else if (data.action === 'EDIT') {
                     let doctorMarkdown = await db.Markdown.findOne({
