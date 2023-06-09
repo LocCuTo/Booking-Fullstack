@@ -28,7 +28,7 @@
             }
 
             .down {
-                padding-top: 10px;
+                padding: 10px 0;
             }
         }
     }
@@ -57,5 +57,9 @@
         img {
             width: 100%;
         }
+    }
+
+    .comment-doctor {
+        padding: 0 100px;
     }
 }

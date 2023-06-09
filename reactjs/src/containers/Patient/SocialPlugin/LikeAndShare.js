@@ -2,13 +2,11 @@ import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { LANGUAGES } from '../../../utils/constant';
 
-const LikeAndShare = ({ dataRef }) => {
+const LikeAndShare = ({ dataRef, language }) => {
     const initFacebookSDK = () => {
         if (window.FB) {
             window.FB.XFBML.parse();
         }
-
-        let { language } = this.props;
         let locale = language === LANGUAGES.VI ? 'vi_VN' : 'en_US';
         window.fbAsyncInit = function () {
             window.FB.init({
@@ -38,7 +36,7 @@ const LikeAndShare = ({ dataRef }) => {
     return (
         <>
             <div
-                class="fb-like"
+                className="fb-like"
                 data-href={dataRef}
                 data-width=""
                 data-layout="standard"

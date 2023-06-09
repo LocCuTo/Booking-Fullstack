@@ -33,8 +33,8 @@ const DetailDoctor = ({ language }) => {
         getDetail(params.id);
     }, [params.id]);
 
-    // let currentURL =
-    //     process.env.REACT_APP_IS_LOCALHOST === 1 ? 'https://siuuuu-restaurant.herokuapp.com/' : window.location.href;
+    let currentURL =
+        +process.env.REACT_APP_IS_LOCALHOST === 1 ? 'https://siuuuu-restaurant.herokuapp.com/' : window.location.href;
 
     return (
         <>
@@ -53,9 +53,9 @@ const DetailDoctor = ({ language }) => {
                             {detailDoctor && detailDoctor.Markdown && detailDoctor.Markdown.description && (
                                 <span>{detailDoctor.Markdown.description}</span>
                             )}
-                            {/* <div className="like-share-plugin">
-                                <LikeAndShare dataRef={currentURL} />
-                            </div> */}
+                        </div>
+                        <div className="like-share-plugin">
+                            <LikeAndShare dataRef={currentURL} />
                         </div>
                     </div>
                 </div>
@@ -72,10 +72,9 @@ const DetailDoctor = ({ language }) => {
                         <div dangerouslySetInnerHTML={{ __html: detailDoctor.Markdown.contentHTML }}></div>
                     )}
                 </div>
-                {/* <div className="comment-doctor">
+                <div className="comment-doctor">
                     <Comment dataRef={currentURL} width={'100%'} />
-                </div> */}
-                <div className="comment-doctor"></div>
+                </div>
             </div>
         </>
     );

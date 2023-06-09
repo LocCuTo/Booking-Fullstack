@@ -21,7 +21,6 @@ const OutstandingDoctor = ({ settings, loadTopDoctor, topDoctorsRedux, language,
     useEffect(() => {
         setArrDoctors(topDoctorsRedux);
     }, [topDoctorsRedux]);
-    console.log(arrDoctors);
 
     return (
         <div className="section-share section-outstanding-doctor">

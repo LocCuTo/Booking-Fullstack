@@ -1,8 +1,9 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize('bookingcare', 'root', null, {
-    host: 'localhost',
-    dialect: 'mysql',
+const sequelize = new Sequelize(process.env.DB_DATABASE_NAME, process.env.DB_USERNAME, null, {
+    host: process.env.DB_HOST,
+    dialect: process.env.DB_DIALECT,
     logging: false,
 });
 
