@@ -8,6 +8,6 @@
 6. Type: 'npm start' in both nodejs & reactjs folder
 7. Enjoy
 
-Find me here
-### Email: phananhloc03102001@gmail.com
-### Facebook: https://www.facebook.com/LocCuToVcl
+##Find me here
+Email: phananhloc03102001@gmail.com
+Facebook: https://www.facebook.com/LocCuToVcl
